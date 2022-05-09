@@ -17,6 +17,18 @@ Add bitmovin pod repository to your Podfile:
   platform :ios, '12.0'
 ```
 
+Suppy a Bitmovin license key to the `BitmovinVideo` element or with the `BitmovinVideoProvider`:
+
+```js
+<BitmovinVideoProvider licenseKey="YOUR_LICENSE_KEY">
+  {/* ... */}
+  <BitmovinVideo source={source} />
+  {/* ... */}
+</BitmovinVideoProvider>
+```
+
+# Transpilation
+
 The app only exports a typescript module, enable typescript transpilation to use it.
 
 # iOS Example
@@ -28,3 +40,4 @@ open `examples/BasicPlayer/ios/BasicPlayer.xcworkspace`
 - Android
 - tvOS
 - Web
+- Video items with poster / metadata
