@@ -14,6 +14,7 @@ const LINKING_ERROR =
 type BitmovinProps = {
   source: string;
   style?: ViewStyle;
+  licenseKey?: string;
 };
 
 const ComponentName = "RNTBitmovinVideo";

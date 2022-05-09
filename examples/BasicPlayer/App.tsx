@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
+  FlatList,
+  Pressable,
   SafeAreaView,
   ScaledSize,
   StatusBar,
   Text,
-  useColorScheme,
   View,
 } from "react-native";
+import { BitmovinVideo, BitmovinVideoProvider } from "react-native-bitmovin";
 
-import { BitmovinVideo } from "react-native-bitmovin";
+import { BITMOVIN_LICENSE_KEY } from "./bitmovin-license-key";
+
+const videos: { title: string; url: string }[] = [
+  {
+    title: "Sintel",
+    url: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
+  },
+  {
+    title: "Art of motion",
+    url: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
+  },
+];
 
 const useScreenDimensions = () => {
   const [screenData, setScreenData] = useState(Dimensions.get("screen"));
@@ -30,11 +43,8 @@ const useScreenDimensions = () => {
 };
 
 const App = () => {
-  const isDarkMode = useColorScheme() === "dark";
+  const [source, setSource] = useState(videos[0].url);
   const { width, height } = useScreenDimensions();
-
-  const orientation = width > height ? "landscape" : "portrait";
-  const ratio = width / height;
 
   let w = width;
   let h = (w * 9) / 16;
@@ -46,29 +56,55 @@ const App = () => {
 
   const backgroundStyle = {
     flex: 1,
-    backgroundColor: isDarkMode ? "black" : "#eee",
+    backgroundColor: "#eee",
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <View
-        style={{
-          backgroundColor: isDarkMode ? "black" : "white",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          flex: 1,
-        }}
-      >
-        <BitmovinVideo
-          source="https://proxy.glenten.tv/60c1bfac679606c871f6772f/index.m3u8?drm=clear"
+    <BitmovinVideoProvider licenseKey={BITMOVIN_LICENSE_KEY}>
+      <SafeAreaView style={backgroundStyle}>
+        <StatusBar barStyle="dark-content" />
+        <View
           style={{
-            width: w,
-            height: h,
+            backgroundColor: "#eee",
+            flex: 1,
           }}
-        />
-      </View>
-    </SafeAreaView>
+        >
+          <BitmovinVideo
+            source={source}
+            style={{
+              width: w,
+              height: h,
+            }}
+          />
+          <FlatList
+            data={videos}
+            extraData={source}
+            style={{ flex: 1, flexGrow: 1 }}
+            ItemSeparatorComponent={() => (
+              <View
+                style={{
+                  height: 1,
+                  backgroundColor: "#ccc",
+                }}
+              />
+            )}
+            renderItem={({ item }) => {
+              return (
+                <Pressable
+                  style={{ padding: 16 }}
+                  onPress={() => setSource(item.url)}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <Text style={{ flex: 1 }}>{item.title}</Text>
+                    <Text style={{ color: "#555" }}>&gt;</Text>
+                  </View>
+                </Pressable>
+              );
+            }}
+          />
+        </View>
+      </SafeAreaView>
+    </BitmovinVideoProvider>
   );
 };
 
