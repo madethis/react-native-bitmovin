@@ -67,7 +67,7 @@ class RNTBitmovinVideo: UIView {
       playerView.frame = bounds
 
       addSubview(playerView)
-      bringSubviewToFront(playerView)
+      bringSubview(toFront: playerView)
     }
 
     // Create source config
