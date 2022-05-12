@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.source         = { :git => "." }
 
   s.ios.deployment_target = "12.0"
-  # s.tvos.deployment_target = "9.0"
+  s.tvos.deployment_target = "9.0"
 
   s.source_files  = "ios/**/*.{h,m,swift}"
   # s.static_framework = true
