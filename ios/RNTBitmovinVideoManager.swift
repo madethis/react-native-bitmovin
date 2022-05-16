@@ -61,13 +61,13 @@ class RNTBitmovinVideo: UIView {
       let playerView = PlayerView(player: player, frame: .zero)
 
       // Listen to player events
-      // player.add(listener: self)
+      player.add(listener: self)
 
       playerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
       playerView.frame = bounds
 
       addSubview(playerView)
-      bringSubview(toFront: playerView)
+      bringSubviewToFront(playerView)
     }
 
     // Create source config
@@ -78,4 +78,10 @@ class RNTBitmovinVideo: UIView {
 
     player.load(sourceConfig: sourceConfig)
   }
+}
+
+extension RNTBitmovinVideo: PlayerListener {
+    func onEvent(_ event: Event, player: Player) {
+        dump(event, name: "[Player Event]", maxDepth: 1)
+    }
 }
