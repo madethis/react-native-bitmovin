@@ -28,9 +28,9 @@ export const BitmovinVideo: VFC<BitmovinVideoProps> = ({
 
 const Context = React.createContext<{ licenseKey?: string }>({});
 
-export const BitmovinVideoProvider: FC<{ licenseKey: string }> = ({
-  children,
-  licenseKey,
-}) => {
+export const BitmovinVideoProvider: FC<{
+  licenseKey: string;
+  children: React.ReactNode;
+}> = ({ children, licenseKey }) => {
   return <Context.Provider value={{ licenseKey }}>{children}</Context.Provider>;
 };

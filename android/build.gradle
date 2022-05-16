@@ -1,7 +1,4 @@
 buildscript {
-  // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-  def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['Bitmovin_kotlinVersion']
-
   repositories {
     google()
     mavenCentral()
@@ -11,26 +8,18 @@ buildscript {
   dependencies {
     classpath 'com.android.tools.build:gradle:3.2.1'
     // noinspection DifferentKotlinGradleVersion
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21"
   }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['Bitmovin_' + name]
-}
-
-def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['Bitmovin_' + name]).toInteger()
-}
-
 android {
-  compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+  compileSdkVersion 28
   defaultConfig {
     minSdkVersion 16
-    targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
+    targetSdkVersion 28
     versionCode 1
     versionName "1.0"
     
@@ -121,10 +110,20 @@ repositories {
   }
 }
 
-def kotlin_version = getExtOrDefault('kotlinVersion')
+def kotlin_version = "1.6.21"
 
 dependencies {
   // noinspection GradleDynamicVersion
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+  implementation "com.bitmovin.player:player:3.18.0"
+}
+
+allprojects {
+  repositories {
+    maven {
+      url 'https://artifacts.bitmovin.com/artifactory/public-releases'
+    }
+  }
 }
