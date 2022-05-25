@@ -18,6 +18,11 @@ class BitmovinVideoViewManager : SimpleViewManager<View>() {
     view.setSource(source)
   }
 
+  @ReactProp(name = "licenseKey")
+  fun setSource(view: BitmovinVideoView, source: String) {
+    view.setSource(source)
+  }
+
   override fun onDropViewInstance(view: BitmovinVideoView) {
     view.cleanup()
   }
