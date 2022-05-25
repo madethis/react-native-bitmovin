@@ -11,14 +11,14 @@
   },
   "dependencies": {
     "react": "17.0.2",
-    "react-native": "0.67.2",
+    "react-native": "0.68",
     "react-native-bitmovin": "link:../../"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
-    "@types/react-native": "0.67.2",
-    "metro-react-native-babel-preset": "^0.67.0",
+    "@types/react-native": "~0.67",
+    "metro-react-native-babel-preset": "0.68",
     "typescript": "4.6.3"
   }
 }
