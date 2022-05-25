@@ -129,7 +129,7 @@ type BitmovinProps = {
   licenseKey?: string;
 };
 
-const ComponentName = "BitmovinVideo";
+const ComponentName = "RNTBitmovinVideo";
 
 export const NativeBitmovinVideo =
   UIManager.getViewManagerConfig(ComponentName) != null

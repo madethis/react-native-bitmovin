@@ -1,3 +1,4 @@
+@file:JvmName("RNTBitmovinVideoManager")
 package com.reactnativebitmovin
 
 import android.graphics.Color
@@ -11,6 +12,7 @@ import com.bitmovin.player.api.source.SourceConfig
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
+
 
 class BitmovinVideoViewManager : SimpleViewManager<View>() {
   override fun getName() = "BitmovinVideo"

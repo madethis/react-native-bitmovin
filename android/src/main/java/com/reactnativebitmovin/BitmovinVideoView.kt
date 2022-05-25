@@ -1,3 +1,4 @@
+@file:JvmName("RNTBitmovinVideo")
 package com.reactnativebitmovin
 
 import android.util.Log
