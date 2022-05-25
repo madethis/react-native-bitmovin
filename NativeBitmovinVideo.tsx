@@ -1,4 +1,9 @@
-import { Platform, UIManager, requireNativeComponent } from "react-native";
+import {
+  Platform,
+  UIManager,
+  requireNativeComponent,
+  ViewStyle,
+} from "react-native";
 
 const LINKING_ERROR =
   `The package 'react-native-bitmovin' doesn't seem to be linked. Make sure: \n\n` +
@@ -117,6 +122,14 @@ type SourceOptions = {
 type TimelineReferencePoint = "End" | "Start";
 
 type SourceType = "Progressive" | "Smooth" | "Hls" | "Dash";
+
+type BitmovinProps = {
+  source: string;
+  style?: ViewStyle;
+  licenseKey?: string;
+};
+
+const ComponentName = "BitmovinVideo";
 
 export const NativeBitmovinVideo =
   UIManager.getViewManagerConfig(ComponentName) != null
