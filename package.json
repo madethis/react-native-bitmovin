@@ -7,7 +7,7 @@
   "homepage": "https://madethis.dk",
   "devDependencies": {
     "@types/react": "^17",
-    "@types/react-native": "0.68",
+    "@types/react-native": "~0.67",
     "prettier": "^2.6.2",
     "react": "17.0.2",
     "react-native": "0.68",
