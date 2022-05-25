@@ -1,56 +1,50 @@
-import { SubtitleTrack } from "./media";
+import { BitmovinSubtitleTrack } from "./media";
 
 type String = string;
-type Boolean = boolean;
-type List<T> = Array<T>;
-type Int = number;
-type Double = number;
-type Long = number;
-type Float = number;
 
 type ByteArray = Uint8Array;
 
 // Android type!
 // https://developer.android.com/reference/kotlin/android/view/ViewGroup.html
-type ViewGroup = never;
+type AndroidViewGroup = never;
 
-type AdsManager = never;
-type ImaSdkSettings = never;
+type BitmovinAdsManager = never;
+type BitmovinImaSdkSettings = never;
 
-export type PlayerConfig = {
+export type BitmovinPlayerConfig = {
   key?: string;
-  styleConfig: StyleConfig;
-  playbackConfig: PlaybackConfig;
-  licensingConfig: LicensingConfig;
-  advertisingConfig: AdvertisingConfig;
-  remoteControlConfig: RemoteControlConfig;
-  adaptationConfig: AdaptationConfig;
-  networkConfig: NetworkConfig;
-  liveConfig: LiveConfig;
-  tweaksConfig: TweaksConfig;
-  bufferConfig: BufferConfig;
+  styleConfig: BitmovinStyleConfig;
+  playbackConfig: BitmovinPlaybackConfig;
+  licensingConfig: BitmovinLicensingConfig;
+  advertisingConfig: BitmovinAdvertisingConfig;
+  remoteControlConfig: BitmovinRemoteControlConfig;
+  adaptationConfig: BitmovinAdaptationConfig;
+  networkConfig: BitmovinNetworkConfig;
+  liveConfig: BitmovinLiveConfig;
+  tweaksConfig: BitmovinTweaksConfig;
+  bufferConfig: BitmovinBufferConfig;
 };
 
-export type BufferConfig = {
-  audioAndVideo: BufferMediaTypeConfig;
-  startupThreshold: Double;
-  restartThreshold: Double;
+export type BitmovinBufferConfig = {
+  audioAndVideo: BitmovinBufferMediaTypeConfig;
+  startupThreshold: number;
+  restartThreshold: number;
 };
 
-export type BufferMediaTypeConfig = {
-  forwardDuration: Double;
+export type BitmovinBufferMediaTypeConfig = {
+  forwardDuration: number;
 };
 
-export type TweaksConfig = {
-  timeChangedInterval: Double;
-  bandwidthEstimateWeightLimit: Int;
-  languagePropertyNormalization: Boolean;
-  localDynamicDashWindowUpdateInterval?: Double;
-  useFiletypeExtractorFallbackForHls: Boolean;
-  useDrmSessionForClearPeriods: Boolean;
-  useDrmSessionForClearSources: Boolean;
-  shouldApplyTtmlRegionWorkaround: Boolean;
-  devicesThatRequireSurfaceWorkaround: List<DeviceDescription>;
+export type BitmovinTweaksConfig = {
+  timeChangedInterval: number;
+  bandwidthEstimateWeightLimit: number;
+  languagePropertyNormalization: boolean;
+  localDynamicDashWindowUpdateInterval?: number;
+  useFiletypeExtractorFallbackForHls: boolean;
+  useDrmSessionForClearPeriods: boolean;
+  useDrmSessionForClearSources: boolean;
+  shouldApplyTtmlRegionWorkaround: boolean;
+  devicesThatRequireSurfaceWorkaround: Array<BitmovinDeviceDescription>;
 };
 
 type DeviceName = {
@@ -63,75 +57,75 @@ type ModelName = {
   name: string;
 };
 
-export type DeviceDescription = DeviceName | ModelName;
+export type BitmovinDeviceDescription = DeviceName | ModelName;
 
-export type LiveConfig = {
-  lowLatencyConfig?: LowLatencyConfig;
-  synchronization: List<SynchronizationConfigEntry>;
-  liveEdgeOffset: Double;
-  minTimeShiftBufferDepth: Double;
+export type BitmovinLiveConfig = {
+  lowLatencyConfig?: BitmovinLowLatencyConfig;
+  synchronization: Array<BitmovinSynchronizationConfigEntry>;
+  liveEdgeOffset: number;
+  minTimeShiftBufferDepth: number;
 };
 
-export type SynchronizationConfigEntry = {
-  source: String;
-  method: LiveSynchronizationMethod;
+export type BitmovinSynchronizationConfigEntry = {
+  source: string;
+  method: BitmovinLiveSynchronizationMethod;
 };
 
-export type LiveSynchronizationMethod = "Ntp";
+export type BitmovinLiveSynchronizationMethod = "Ntp";
 
-export type LowLatencySynchronizationConfig = {
-  playbackRateThreshold: Double;
-  seekThreshold: Double;
-  playbackRate: Float;
+export type BitmovinLowLatencySynchronizationConfig = {
+  playbackRateThreshold: number;
+  seekThreshold: number;
+  playbackRate: number;
 };
 
-export type LowLatencyConfig = {
-  targetLatency: Double;
-  catchupConfig: LowLatencySynchronizationConfig;
-  fallbackConfig: LowLatencySynchronizationConfig;
+export type BitmovinLowLatencyConfig = {
+  targetLatency: number;
+  catchupConfig: BitmovinLowLatencySynchronizationConfig;
+  fallbackConfig: BitmovinLowLatencySynchronizationConfig;
 };
 
-export type AdaptationConfig = {
-  initialBandwidthEstimateOverride?: Long;
-  maxSelectableVideoBitrate: Int;
-  isRebufferingAllowed: Boolean;
-  preload: Boolean;
+export type BitmovinAdaptationConfig = {
+  initialBandwidthEstimateOverride?: number;
+  maxSelectableVideoBitrate: number;
+  isRebufferingAllowed: boolean;
+  preload: boolean;
 };
 
-export type NetworkConfig = {
-  preprocessHttpRequestCallback?: PreprocessHttpRequestCallback;
-  preprocessHttpResponseCallback?: PreprocessHttpResponseCallback;
+export type BitmovinNetworkConfig = {
+  preprocessHttpRequestCallback?: BitmovinPreprocessHttpRequestCallback;
+  preprocessHttpResponseCallback?: BitmovinPreprocessHttpResponseCallback;
 };
 
-export type PreprocessHttpRequestCallback = {
+export type BitmovinPreprocessHttpRequestCallback = {
   preprocessHttpRequest(
-    type: HttpRequestType,
-    request: HttpRequest
-  ): Promise<HttpRequest>;
+    type: BitmovinHttpRequestType,
+    request: BitmovinHttpRequest
+  ): Promise<BitmovinHttpRequest>;
 };
 
-export type PreprocessHttpResponseCallback = {
+export type BitmovinPreprocessHttpResponseCallback = {
   preprocessHttpResponse(
-    type: HttpRequestType,
-    response: HttpResponse
-  ): Promise<HttpResponse>;
+    type: BitmovinHttpRequestType,
+    response: BitmovinHttpResponse
+  ): Promise<BitmovinHttpResponse>;
 };
 
-export type HttpRequest = {
+export type BitmovinHttpRequest = {
   body?: ByteArray;
   headers?: { [key: string]: string };
   url: string;
 };
 
-export type HttpResponse = {
-  httpRequest: HttpRequest;
-  url: String;
-  status: Int;
-  headers: Map<String, String>;
+export type BitmovinHttpResponse = {
+  httpRequest: BitmovinHttpRequest;
+  url: string;
+  status: number;
+  headers: { [key: string]: string };
   body: ByteArray;
 };
 
-export type HttpRequestType =
+export type BitmovinHttpRequestType =
   | "Unknown"
   | "KeyHlsAes"
   | "DrmLicenseWidevine"
@@ -145,80 +139,84 @@ export type HttpRequestType =
   | "ManifestHlsMaster"
   | "ManifestDash";
 
-export type RemoteControlConfig = {
-  receiverStylesheetUrl?: String;
+export type BitmovinRemoteControlConfig = {
+  receiverStylesheetUrl?: string;
   customReceiverConfig?: { [key: string]: string | null };
-  isCastEnabled: Boolean;
-  sendManifestRequestsWithCredentials: Boolean;
-  sendSegmentRequestsWithCredentials: Boolean;
-  sendDrmLicenseRequestsWithCredentials: Boolean;
+  isCastEnabled: boolean;
+  sendManifestRequestsWithCredentials: boolean;
+  sendSegmentRequestsWithCredentials: boolean;
+  sendDrmLicenseRequestsWithCredentials: boolean;
 };
 
-export type LicensingConfig = { delay: Int };
+export type BitmovinLicensingConfig = { delay: number };
 
-export type AdvertisingConfig = {
-  schedule: List<AdItem>;
-  companionAdContainers?: List<CompanionAdContainer>;
-  adsManagerAvailableCallback?: AdsManagerAvailableCallback;
-  beforeInitialization?: BeforeInitializationCallback;
+export type BitmovinAdvertisingConfig = {
+  schedule: Array<BitmovinAdItem>;
+  companionAdContainers?: Array<BitmovinCompanionAdContainer>;
+  adsManagerAvailableCallback?: BitmovinAdsManagerAvailableCallback;
+  beforeInitialization?: BitmovinBeforeInitializationCallback;
 };
 
-export type AdsManagerAvailableCallback = {
-  onAdsManagerAvailable(adsManager: AdsManager): void;
+export type BitmovinAdsManagerAvailableCallback = {
+  onAdsManagerAvailable(adsManager: BitmovinAdsManager): void;
 };
 
-export type BeforeInitializationCallback = {
-  beforeInitialization(settings: ImaSdkSettings): void;
+export type BitmovinBeforeInitializationCallback = {
+  beforeInitialization(settings: BitmovinImaSdkSettings): void;
 };
 
-export type CompanionAdContainer = {
-  container: ViewGroup;
-  width: Int;
-  height: Int;
+export type BitmovinCompanionAdContainer = {
+  container: AndroidViewGroup;
+  width: number;
+  height: number;
 };
 
-export type AdItem = {
-  sources: Array<AdSource>;
-  position: String;
-  replaceContentDuration: Double;
-  preloadOffset: Double;
+export type BitmovinAdItem = {
+  sources: Array<BitmovinAdSource>;
+  position: string;
+  replaceContentDuration: number;
+  preloadOffset: number;
 };
 
-export type AdSource = {
-  type: AdSourceType;
-  tag: String;
+export type BitmovinAdSource = {
+  type: BitmovinAdSourceType;
+  tag: string;
 };
 
-export type AdSourceType = "Progressive" | "Unknown" | "Ima";
+export type BitmovinAdSourceType = "Progressive" | "Unknown" | "Ima";
 
-export type StyleConfig = {
-  isUiEnabled: Boolean;
-  playerUiCss: String;
+export type BitmovinStyleConfig = {
+  isUiEnabled: boolean;
+  playerUiCss: string;
   supplementalPlayerUiCss?: string;
   playerUiJs: string;
-  isHideFirstFrame: Boolean;
-  scalingMode: ScalingMode;
+  isHideFirstFrame: boolean;
+  scalingMode: BitmovinScalingMode;
 };
 
-export type PlaybackConfig = {
-  isAutoplayEnabled: Boolean;
-  isMuted: Boolean;
-  isTimeShiftEnabled: Boolean;
-  videoCodecPriority: List<String>;
-  audioCodecPriority: List<String>;
-  isTunneledPlaybackEnabled: Boolean;
-  seekMode: SeekMode;
-  forcedSubtitleCallback?: ForcedSubtitleCallback;
-  audioFilter: MediaFilter;
-  videoFilter: MediaFilter;
+export type BitmovinPlaybackConfig = {
+  isAutoplayEnabled: boolean;
+  isMuted: boolean;
+  isTimeShiftEnabled: boolean;
+  videoCodecPriority: Array<String>;
+  audioCodecPriority: Array<String>;
+  isTunneledPlaybackEnabled: boolean;
+  seekMode: BitmovinSeekMode;
+  forcedSubtitleCallback?: BitmovinForcedSubtitleCallback;
+  audioFilter: BitmovinMediaFilter;
+  videoFilter: BitmovinMediaFilter;
 };
 
-export type ScalingMode = "Zoom" | "Stretch" | "Fit";
+export type BitmovinScalingMode = "Zoom" | "Stretch" | "Fit";
 
-export type SeekMode = "NextSync" | "PreviousSync" | "ClosestSync" | "Exact";
+export type BitmovinSeekMode =
+  | "NextSync"
+  | "PreviousSync"
+  | "ClosestSync"
+  | "Exact";
 
-export type ForcedSubtitleCallback = {
-  isForcedSubtitle(subtitleTrack: SubtitleTrack): boolean;
+export type BitmovinForcedSubtitleCallback = {
+  isForcedSubtitle(subtitleTrack: BitmovinSubtitleTrack): boolean;
 };
 
-export type MediaFilter = "None" | "Loose" | "Strict";
+export type BitmovinMediaFilter = "None" | "Loose" | "Strict";

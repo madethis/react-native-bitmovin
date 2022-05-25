@@ -1,28 +1,28 @@
-export type ThumbnailTrack = Track & {
+export type BitmovinThumbnailTrack = BitmovinTrack & {
   type: "Thumbnail";
   url: string;
 };
 
-export type AudioTrack = Track & {
+export type BitmovinAudioTrack = BitmovinTrack & {
   type: "Thumbnail";
   language?: string;
 };
 
-export type SubtitleTrack = Track & {
+export type BitmovinSubtitleTrack = BitmovinTrack & {
   language?: string;
   mimeType?: string;
   isForced?: boolean;
 };
 
-export type Track = {
+export type BitmovinTrack = {
   url?: string;
   label?: string;
   id?: string;
   isDefault?: boolean;
-  roles?: Array<MediaTrackRole>;
+  roles?: Array<BitmovinMediaTrackRole>;
 };
 
-export type MediaTrackRole = {
+export type BitmovinMediaTrackRole = {
   schemeIdUri: string;
   value?: string;
   id?: string;
