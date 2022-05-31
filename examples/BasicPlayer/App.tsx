@@ -9,7 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { BitmovinVideo, BitmovinVideoProvider } from "react-native-bitmovin";
+import { BitmovinVideo } from "react-native-bitmovin";
 
 import { BITMOVIN_LICENSE_KEY } from "./bitmovin-license-key";
 
@@ -60,51 +60,54 @@ const App = () => {
   };
 
   return (
-    <BitmovinVideoProvider licenseKey={BITMOVIN_LICENSE_KEY}>
-      <SafeAreaView style={backgroundStyle}>
-        <StatusBar barStyle="dark-content" />
-        <View
+    <SafeAreaView style={backgroundStyle}>
+      <StatusBar barStyle="dark-content" />
+      <View
+        style={{
+          backgroundColor: "#eee",
+          flex: 1,
+        }}
+      >
+        <BitmovinVideo
+          config={{ key: BITMOVIN_LICENSE_KEY }}
+          source={{ url: source }}
           style={{
-            backgroundColor: "#eee",
-            flex: 1,
+            width: w,
+            height: h,
           }}
-        >
-          <BitmovinVideo
-            source={source}
-            style={{
-              width: w,
-              height: h,
-            }}
-          />
-          <FlatList
-            data={videos}
-            extraData={source}
-            style={{ flex: 1, flexGrow: 1 }}
-            ItemSeparatorComponent={() => (
-              <View
-                style={{
-                  height: 1,
-                  backgroundColor: "#ccc",
-                }}
-              />
-            )}
-            renderItem={({ item }) => {
-              return (
-                <Pressable
-                  style={{ padding: 16 }}
-                  onPress={() => setSource(item.url)}
+        />
+        <FlatList
+          data={videos}
+          extraData={source}
+          style={{ flex: 1, flexGrow: 1 }}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "#ccc",
+              }}
+            />
+          )}
+          renderItem={({ item }) => {
+            return (
+              <Pressable
+                style={{ padding: 16 }}
+                onPress={() => setSource(item.url)}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                  }}
                 >
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={{ flex: 1 }}>{item.title}</Text>
-                    <Text style={{ color: "#555" }}>&gt;</Text>
-                  </View>
-                </Pressable>
-              );
-            }}
-          />
-        </View>
-      </SafeAreaView>
-    </BitmovinVideoProvider>
+                  <Text style={{ flex: 1, color: "black" }}>{item.title}</Text>
+                  <Text style={{ color: "#555" }}>&gt;</Text>
+                </View>
+              </Pressable>
+            );
+          }}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 

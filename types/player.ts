@@ -12,17 +12,17 @@ type BitmovinAdsManager = never;
 type BitmovinImaSdkSettings = never;
 
 export type BitmovinPlayerConfig = {
-  key?: string;
-  styleConfig: BitmovinStyleConfig;
-  playbackConfig: BitmovinPlaybackConfig;
-  licensingConfig: BitmovinLicensingConfig;
-  advertisingConfig: BitmovinAdvertisingConfig;
-  remoteControlConfig: BitmovinRemoteControlConfig;
-  adaptationConfig: BitmovinAdaptationConfig;
-  networkConfig: BitmovinNetworkConfig;
-  liveConfig: BitmovinLiveConfig;
-  tweaksConfig: BitmovinTweaksConfig;
-  bufferConfig: BitmovinBufferConfig;
+  key: string;
+  styleConfig?: BitmovinStyleConfig;
+  playbackConfig?: BitmovinPlaybackConfig;
+  licensingConfig?: BitmovinLicensingConfig;
+  advertisingConfig?: BitmovinAdvertisingConfig;
+  remoteControlConfig?: BitmovinRemoteControlConfig;
+  adaptationConfig?: BitmovinAdaptationConfig;
+  networkConfig?: BitmovinNetworkConfig;
+  liveConfig?: BitmovinLiveConfig;
+  tweaksConfig?: BitmovinTweaksConfig;
+  bufferConfig?: BitmovinBufferConfig;
 };
 
 export type BitmovinBufferConfig = {

@@ -14,8 +14,8 @@ export type BitmovinSourceConfig = {
   subtitleTracks?: Array<BitmovinSubtitleTrack>;
   thumbnailTrack?: BitmovinThumbnailTrack;
   drmConfig?: BitmovinDrmConfig;
-  labelingConfig: BitmovinLabelingConfig;
-  vrConfig: BitmovinVrConfig;
+  labelingConfig?: BitmovinLabelingConfig;
+  vrConfig?: BitmovinVrConfig;
   videoCodecPriority?: Array<string>;
   audioCodecPriority?: Array<string>;
   options?: BitmovinSourceOptions;

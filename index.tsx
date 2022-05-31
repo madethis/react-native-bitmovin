@@ -1,36 +1,13 @@
-import React, { FC, useContext, VFC } from "react";
-import { ViewStyle } from "react-native";
-import { NativeBitmovinVideo } from "./NativeBitmovinVideo";
+import React, { VFC } from "react";
+import {
+  NativeBitmovinVideo,
+  NativeBitmovinVideoProps,
+} from "./NativeBitmovinVideo";
 
-type BitmovinVideoProps = {
-  source: string;
-  style?: ViewStyle;
-  licenseKey?: string;
-};
-
-export const BitmovinVideo: VFC<BitmovinVideoProps> = ({
+export const BitmovinVideo: VFC<NativeBitmovinVideoProps> = ({
   source,
   style,
-  ...props
+  config,
 }) => {
-  const context = useContext(Context);
-
-  const licenseKey = props.licenseKey || context.licenseKey;
-
-  return (
-    <NativeBitmovinVideo
-      source={source}
-      style={style}
-      licenseKey={licenseKey}
-    />
-  );
-};
-
-const Context = React.createContext<{ licenseKey?: string }>({});
-
-export const BitmovinVideoProvider: FC<{
-  licenseKey: string;
-  children: React.ReactNode;
-}> = ({ children, licenseKey }) => {
-  return <Context.Provider value={{ licenseKey }}>{children}</Context.Provider>;
+  return <NativeBitmovinVideo source={source} style={style} config={config} />;
 };

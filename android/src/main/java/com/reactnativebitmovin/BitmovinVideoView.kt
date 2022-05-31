@@ -1,4 +1,3 @@
-@file:JvmName("RNTBitmovinVideo")
 package com.reactnativebitmovin
 
 import android.util.Log
@@ -19,8 +18,6 @@ const val TAG = "BitmovinVideoView"
  * Heavily inspired by
  * https://github.com/react-native-video/react-native-video/blob/master/android-exoplayer/src/main/java/com/brentvatne/exoplayer/ReactExoplayerView.java
  */
-
-
 class BitmovinVideoView : FrameLayout, LifecycleEventListener {
 
     constructor(context: ThemedReactContext) : super(context) {
@@ -32,10 +29,8 @@ class BitmovinVideoView : FrameLayout, LifecycleEventListener {
     private var playerView: PlayerView? = null
     private var player: Player? = null
 
-    var source: String? by Delegates.observable(null) { _, _, _ -> startPlayer() }
-
-    var licenseKey: String? by Delegates.observable(null) { _, _, _ -> startPlayer() }
-
+    var source: SourceConfig? by Delegates.observable(null) { _, _, _ -> startPlayer("source") }
+    var config: PlayerConfig? by Delegates.observable(null) { _, _, _ -> startPlayer("config") }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -61,68 +56,53 @@ class BitmovinVideoView : FrameLayout, LifecycleEventListener {
         if (view == null) return
         Log.d(TAG, "reLayout has view")
         view.measure(
-            MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
+                MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
         )
         view.layout(
-            view.getLeft(),
-            view.getTop(),
-            view.getMeasuredWidth(),
-            view.getMeasuredHeight()
+                view.getLeft(),
+                view.getTop(),
+                view.getMeasuredWidth(),
+                view.getMeasuredHeight()
         )
     }
 
-    private fun startPlayer() {
-        Log.d(TAG, "startPlayer")
-        if (source == null) {
-            Log.d(TAG, "source is null")
+    private fun startPlayer(newProp: String) {
+        Log.d(TAG, "prop set: $newProp")
+
+        val config = this.config
+        if (config == null) {
+            Log.d(TAG, "config is null")
             return
         }
 
-        if (licenseKey == null) {
-            Log.d(TAG, "licenseKey is null")
-            return
+        //        Handler(Looper.getMainLooper())
+        //            .postDelayed(
+
+        if (playerView == null || newProp == "config") {
+            // playerView?.getPlayer()?.destroy()
+
+            val view = PlayerView(reactContext, Player.create(reactContext, config))
+
+            playerView = view
+
+            val layoutParams =
+                    LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            view.layoutParams = layoutParams
+            this.addView(playerView, 0, layoutParams)
         }
-
-//        Handler(Looper.getMainLooper())
-//            .postDelayed(
-//                {
-                    Log.d(TAG, "startPlayer delayed")
-                    Log.d(TAG, licenseKey)
-
-                    val playerConfig = PlayerConfig(licenseKey)
-
-                    // See
-                    // https://github.dev/bitmovin/bitmovin-player-android-samples/blob/main/BasicAds/src/main/java/com/bitmovin/player/samples/ads/basic/MainActivity.java#L70
-
-                    // TODO
-                    // playerConfig.licenseKey = ...
-
-                    if (playerView == null) {
-                        val view =
-                            PlayerView(
-                                reactContext,
-                                Player.create(reactContext, playerConfig)
-                            )
-                        playerView = view
-                        val layoutParams = LinearLayout.LayoutParams(
-                            LayoutParams.MATCH_PARENT,
-                            LayoutParams.MATCH_PARENT
-                        )
-
-                        view.layoutParams = layoutParams
-
-
-                        this.addView(playerView, 0, layoutParams)
-                    }
-
-                    playerView!!.getPlayer()!!.load(SourceConfig.fromUrl(source!!))
 
         reLayout(playerView)
-                // },
-                // 1
-            // )
+
+        if (newProp == "source") {
+            val source = this.source
+            val player = playerView?.getPlayer()
+            if (source != null) {
+                player?.load(source)
+                player?.play()
+            } else {
+                player?.unload()
+            }
+        }
     }
-
-
 }
