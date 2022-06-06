@@ -16,7 +16,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: yarn
       - name: Install dependencies
-        run: yarn install --immutable
+        run: |
+          yarn install --immutable
+          cd examples/BasicPlayer && yarn install --immutable
+          cd ../BasicPlayerTV && yarn install --immutable
+          cd ../BasicPlayerWeb && yarn install --immutable
       - name: Typecheck
         uses: EPMatt/reviewdog-action-tsc@v1
       - uses: gozala/typescript-error-reporter-action@v1.0.8
