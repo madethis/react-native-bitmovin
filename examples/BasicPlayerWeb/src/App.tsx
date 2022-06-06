@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { BitmovinVideo, BitmovinVideoProps } from "react-native-bitmovin";
 
+// @ts-ignore
 import { BITMOVIN_LICENSE_KEY } from "./bitmovin-license-key";
 
 const videos: (BitmovinVideoProps["source"] & { title: string })[] = [
