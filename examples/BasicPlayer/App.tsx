@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -15,12 +15,12 @@ import { BITMOVIN_LICENSE_KEY } from "./bitmovin-license-key";
 
 const videos: { title: string; url: string }[] = [
   {
-    title: "Sintel",
-    url: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
-  },
-  {
     title: "Art of motion",
     url: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
+  },
+  {
+    title: "Sintel",
+    url: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
   },
 ];
 
@@ -42,8 +42,10 @@ const useScreenDimensions = () => {
   return screenData;
 };
 
+const config = { key: BITMOVIN_LICENSE_KEY };
+
 const App = () => {
-  const [source, setSource] = useState(videos[0].url);
+  const [url, setUrl] = useState(videos[0].url);
   const { width, height } = useScreenDimensions();
 
   let w = width;
@@ -59,6 +61,10 @@ const App = () => {
     backgroundColor: "#eee",
   };
 
+  const source = useMemo(() => {
+    return { url: url };
+  }, [url]);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle="dark-content" />
@@ -69,8 +75,8 @@ const App = () => {
         }}
       >
         <BitmovinVideo
-          config={{ key: BITMOVIN_LICENSE_KEY }}
-          source={{ url: source }}
+          config={config}
+          source={source}
           style={{
             width: w,
             height: h,
@@ -78,7 +84,7 @@ const App = () => {
         />
         <FlatList
           data={videos}
-          extraData={source}
+          extraData={url}
           style={{ flex: 1, flexGrow: 1 }}
           ItemSeparatorComponent={() => (
             <View
@@ -92,7 +98,7 @@ const App = () => {
             return (
               <Pressable
                 style={{ padding: 16 }}
-                onPress={() => setSource(item.url)}
+                onPress={() => setUrl(item.url)}
               >
                 <View
                   style={{

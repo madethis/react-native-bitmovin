@@ -5,7 +5,10 @@ import {
 } from "./media";
 
 export type BitmovinSourceConfig = {
-  url: string;
+  dash: string; // Android
+  hls: string; // iOS
+  smooth: string; // Windows
+  progressive: string; // Fallback w/o manifest
   type?: BitmovinSourceType;
   title?: string;
   description?: string;

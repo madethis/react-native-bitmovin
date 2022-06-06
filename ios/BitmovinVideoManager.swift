@@ -1,17 +1,18 @@
 import BitmovinPlayer
 
 @objc(RNTBitmovinVideoManager)
-class RNTBitmovinVideoManager: RCTViewManager {
+class BitmovinVideoManager: RCTViewManager {
   @objc override static func requiresMainQueueSetup() -> Bool {
     return false
   }
 
-  override func view() -> (RNTBitmovinVideo) {
-    return RNTBitmovinVideo()
+  override func view() -> (BitmovinVideo) {
+    return BitmovinVideo()
   }
 }
 
-class RNTBitmovinVideo: UIView {
+@objc(RNTBitmovinVideo)
+class BitmovinVideo: UIView {
   @objc var source: String? {
     didSet {
       startPlayer()
@@ -80,8 +81,8 @@ class RNTBitmovinVideo: UIView {
   }
 }
 
-extension RNTBitmovinVideo: PlayerListener {
-    func onEvent(_ event: Event, player: Player) {
-        dump(event, name: "[Player Event]", maxDepth: 1)
-    }
+extension BitmovinVideo: PlayerListener {
+  func onEvent(_ event: Event, player _: Player) {
+    dump(event, name: "[Player Event]", maxDepth: 1)
+  }
 }
