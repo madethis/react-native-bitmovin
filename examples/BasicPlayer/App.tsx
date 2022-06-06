@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  Button,
   Dimensions,
   FlatList,
   Pressable,
@@ -9,18 +10,18 @@ import {
   Text,
   View,
 } from "react-native";
-import { BitmovinVideo } from "react-native-bitmovin";
+import { BitmovinVideo, BitmovinVideoProps } from "react-native-bitmovin";
 
 import { BITMOVIN_LICENSE_KEY } from "./bitmovin-license-key";
 
-const videos: { title: string; url: string }[] = [
+const videos: (BitmovinVideoProps["source"] & { title: string })[] = [
   {
     title: "Art of motion",
-    url: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
+    dash: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd",
   },
   {
     title: "Sintel",
-    url: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
+    dash: "https://bitdash-a.akamaihd.net/content/sintel/sintel.mpd",
   },
 ];
 
@@ -45,7 +46,8 @@ const useScreenDimensions = () => {
 const config = { key: BITMOVIN_LICENSE_KEY };
 
 const App = () => {
-  const [url, setUrl] = useState(videos[0].url);
+  const [show, setShow] = useState(true);
+  const [source, setSource] = useState(videos[0]);
   const { width, height } = useScreenDimensions();
 
   let w = width;
@@ -61,10 +63,6 @@ const App = () => {
     backgroundColor: "#eee",
   };
 
-  const source = useMemo(() => {
-    return { url: url };
-  }, [url]);
-
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle="dark-content" />
@@ -74,17 +72,37 @@ const App = () => {
           flex: 1,
         }}
       >
-        <BitmovinVideo
-          config={config}
-          source={source}
+        <View
           style={{
             width: w,
             height: h,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {show ? (
+            <BitmovinVideo
+              config={config}
+              source={source}
+              style={{
+                width: w,
+                height: h,
+              }}
+            />
+          ) : (
+            <Text style={{ color: "black" }}>No player</Text>
+          )}
+        </View>
+        <Button
+          title={show ? "Deactivate player" : "Activate player"}
+          onPress={() => {
+            setShow((v) => !v);
           }}
         />
         <FlatList
+          keyExtractor={(item) => item.title}
           data={videos}
-          extraData={url}
+          extraData={source}
           style={{ flex: 1, flexGrow: 1 }}
           ItemSeparatorComponent={() => (
             <View
@@ -98,7 +116,7 @@ const App = () => {
             return (
               <Pressable
                 style={{ padding: 16 }}
-                onPress={() => setUrl(item.url)}
+                onPress={() => setSource(item)}
               >
                 <View
                   style={{

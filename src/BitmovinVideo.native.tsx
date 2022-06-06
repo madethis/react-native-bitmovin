@@ -9,7 +9,7 @@ const LINKING_ERROR =
 
 const ComponentName = "RNTBitmovinVideo";
 
-export const NativeBitmovinVideo =
+export const BitmovinVideo =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<BitmovinVideoProps>(ComponentName)
     : () => {

@@ -51,10 +51,7 @@ class BitmovinVideoView : FrameLayout, LifecycleEventListener {
     }
 
     private fun reLayout(view: View?) {
-
-        Log.d(TAG, "reLayout")
         if (view == null) return
-        Log.d(TAG, "reLayout has view")
         view.measure(
                 MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
@@ -68,19 +65,14 @@ class BitmovinVideoView : FrameLayout, LifecycleEventListener {
     }
 
     private fun startPlayer(newProp: String) {
-        Log.d(TAG, "prop set: $newProp")
-
         val config = this.config
         if (config == null) {
-            Log.d(TAG, "config is null")
             return
         }
 
-        //        Handler(Looper.getMainLooper())
-        //            .postDelayed(
-
         if (playerView == null || newProp == "config") {
-            // playerView?.getPlayer()?.destroy()
+            playerView?.getPlayer()?.pause()
+            playerView?.getPlayer()?.destroy()
 
             val view = PlayerView(reactContext, Player.create(reactContext, config))
 
@@ -104,5 +96,10 @@ class BitmovinVideoView : FrameLayout, LifecycleEventListener {
                 player?.unload()
             }
         }
+    }
+
+    fun cleanup() {
+        playerView?.getPlayer()?.pause()  
+        playerView?.getPlayer()?.destroy()  
     }
 }

@@ -9,7 +9,7 @@ import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 
-class BitmovinVideoViewManager : SimpleViewManager<View>() {
+class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
   override fun getName() = "RNTBitmovinVideo"
 
   override fun createViewInstance(reactContext: ThemedReactContext): BitmovinVideoView {
@@ -22,7 +22,7 @@ class BitmovinVideoViewManager : SimpleViewManager<View>() {
     view.source =
         source?.let(
             fun(source: ReadableMap): SourceConfig? {
-              val url = source.getString("url")
+              val url = source.getString("dash")
 
               if (url == null) {
                 return null
@@ -40,7 +40,8 @@ class BitmovinVideoViewManager : SimpleViewManager<View>() {
     view.config = PlayerConfig(config?.getString("key")!!)
   }
 
-  // override fun onDropViewInstance(view: BitmovinVideoView) {
-  //   view.cleanup()
-  // }
+  override fun onDropViewInstance(view: BitmovinVideoView) {
+    super.onDropViewInstance(view)
+    view.cleanup();
+  }
 }
