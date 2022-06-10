@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useCallback, useMemo, useReducer, useState } from "react";
 import {
   Button,
   FlatList,
@@ -30,6 +30,10 @@ const App = () => {
   const [show, setShow] = useState(true);
   const [source, setSource] = useState(videos[0]);
 
+  const log = useCallback((event: any) => {
+    console.debug("event", event);
+  }, []);
+
   const backgroundStyle = {
     flex: 1,
     backgroundColor: "#eee",
@@ -55,15 +59,9 @@ const App = () => {
                 playback: { autoplay },
                 style: {},
               }}
-              onReady={(event) => {
-                console.debug("onReady!", event);
-              }}
-              onSourceLoaded={(event) => {
-                console.debug("onSourceLoaded!", event);
-              }}
-              onTimeChanged={(event) => {
-                console.debug("onTimeChanged", event);
-              }}
+              onReady={log}
+              onSourceLoaded={log}
+              onTimeChanged={log}
               source={source}
             />
           )}

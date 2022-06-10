@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import {
   Button,
   Dimensions,
@@ -55,7 +55,10 @@ const App = () => {
   const { width, height } = useScreenDimensions();
   const [logs, l] = useReducer(
     (state: [Date, string][], action: string): [Date, string][] => {
-      return [[new Date(), action], ...state];
+      return [[new Date(), action], ...state].slice(0, 1000) as [
+        Date,
+        string
+      ][];
     },
     []
   );
@@ -99,8 +102,8 @@ const App = () => {
         >
           {show ? (
             <BitmovinVideo
-              onReady={log("onReady")}
-              onSourceLoaded={log("onSourceLoaded")}
+              onReady={useMemo(() => log("onReady"), [])}
+              // onSourceLoaded={log("onSourceLoaded")}
               onTimeChanged={log("onTimeChanged")}
               config={config}
               source={source}

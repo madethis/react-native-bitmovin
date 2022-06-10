@@ -1,4 +1,8 @@
-import { Player, PlayerAPI } from "bitmovin-player/modules/bitmovinplayer-core";
+import {
+  Player,
+  PlayerAPI,
+  PlayerEvent,
+} from "bitmovin-player/modules/bitmovinplayer-core";
 import { UIFactory } from "bitmovin-player-ui";
 import { useRef, useEffect, MutableRefObject } from "react";
 import { View } from "react-native";
@@ -34,18 +38,21 @@ export const usePlayer = ({
   container,
   config,
   source,
-}: { container: MutableRefObject<View> } & Pick<
-  BitmovinVideoProps,
-  "config" | "source"
->) => {
-  const player = useRef<PlayerAPI>();
+  ...rest
+}: { container: MutableRefObject<View> } & BitmovinVideoProps) => {
+  const player = useRef<PlayerAPI | undefined>(undefined);
+  const previousEventHandlersRef = useRef<{
+    [event: string]: (event: any) => void;
+  }>({});
 
   const configHash = JSON.stringify(config);
 
   useEffect(() => {
+    // https://cdn.bitmovin.com/player/web/8/docs/index.html
     const newPlayer = new Player(container.current as any, config);
     UIFactory.buildDefaultUI(newPlayer);
     player.current = newPlayer;
+    previousEventHandlersRef.current = {};
 
     return () => {
       newPlayer.pause();
@@ -53,18 +60,80 @@ export const usePlayer = ({
     };
   }, [configHash]);
 
+  // NB. Must be after player ref update effect to catch first player instance
+  useUpdateEventHandlers({ player, props: rest, previousEventHandlersRef });
+
   useEffect(() => {
     if (!player.current) {
       return;
     }
 
-    player.current?.unload();
     if (source) {
       player.current?.load(source);
     } else {
+      player.current?.unload();
     }
   }, [
     configHash, // Trigger load on changed config as well
     source,
   ]);
 };
+
+function useUpdateEventHandlers({
+  player,
+  props,
+  previousEventHandlersRef,
+}: {
+  player: MutableRefObject<PlayerAPI | undefined>;
+  props: Partial<BitmovinVideoProps>;
+  previousEventHandlersRef: MutableRefObject<{
+    [event: string]: (event: any) => void;
+  }>;
+}) {
+  const eventHandlersChangedRef = useRef<number>(0);
+  const ob = Object.entries(props);
+  const entries = ob
+    .flatMap(([key, handler]): [string, (event: any) => void][] => {
+      if (key.startsWith("on") && typeof handler === "function") {
+        return [[key.substring(2).toLowerCase(), handler]];
+      }
+
+      return [];
+    })
+    .sort((a, b) => (a[0] as string).localeCompare(b[0]));
+
+  if (Object.keys(previousEventHandlersRef.current).length !== entries.length) {
+    eventHandlersChangedRef.current++;
+  } else {
+    if (
+      entries.some(([event, handler]) => {
+        return handler !== previousEventHandlersRef.current[event as string];
+      })
+    ) {
+      eventHandlersChangedRef.current++;
+    }
+  }
+
+  useEffect(() => {
+    const p = player.current;
+    if (!p) {
+      return;
+    }
+
+    const previousEventHandlers = previousEventHandlersRef.current;
+    previousEventHandlersRef.current = Object.fromEntries(entries);
+
+    for (const [event, handler] of entries) {
+      const previousHandler = previousEventHandlers[event as string];
+      const newHandler = previousHandler !== handler;
+
+      if (newHandler) {
+        p.off(event as PlayerEvent, previousHandler);
+      }
+
+      if (!previousHandler || newHandler) {
+        p.on(event as PlayerEvent, handler);
+      }
+    }
+  }, [eventHandlersChangedRef.current]);
+}

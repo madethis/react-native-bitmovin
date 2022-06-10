@@ -50,8 +50,6 @@ export type BitmovinEvent =
   | "VideoPlaybackQualityChanged"
   | "AudioPlaybackQualityChanged"
   | "TimeChanged"
-  | "CueParsed"
-  | "CueEnter"
   | "SegmentPlayback"
   | "Metadata"
   | "MetadataParsed"
