@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import {
   Button,
   Dimensions,
@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { BitmovinVideo, BitmovinVideoProps } from "react-native-bitmovin";
+import { BitmovinVideoPlayerConfig } from "../../src/BitmovinVideoProps";
 
 // @ts-ignore
 import { BITMOVIN_LICENSE_KEY } from "./bitmovin-license-key";
@@ -44,12 +45,27 @@ const useScreenDimensions = () => {
   return screenData;
 };
 
-const config = { key: BITMOVIN_LICENSE_KEY };
+const config: BitmovinVideoPlayerConfig = {
+  key: BITMOVIN_LICENSE_KEY,
+};
 
 const App = () => {
   const [show, setShow] = useState(true);
   const [source, setSource] = useState(videos[0]);
   const { width, height } = useScreenDimensions();
+  const [logs, l] = useReducer(
+    (state: [Date, string][], action: string): [Date, string][] => {
+      return [[new Date(), action], ...state];
+    },
+    []
+  );
+
+  const log = (name: string) => {
+    return () => {
+      console.log("event", name);
+      l(name);
+    };
+  };
 
   let w = width;
   let h = (w * 9) / 16;
@@ -83,6 +99,9 @@ const App = () => {
         >
           {show ? (
             <BitmovinVideo
+              onReady={log("onReady")}
+              onSourceLoaded={log("onSourceLoaded")}
+              onTimeChanged={log("onTimeChanged")}
               config={config}
               source={source}
               style={{
@@ -102,9 +121,9 @@ const App = () => {
         />
         <FlatList
           keyExtractor={(item) => item.title}
+          style={{ flexShrink: 1, flexGrow: 0 }}
           data={videos}
           extraData={source}
-          style={{ flex: 1, flexGrow: 1 }}
           ItemSeparatorComponent={() => (
             <View
               style={{
@@ -128,6 +147,31 @@ const App = () => {
                   <Text style={{ color: "#555" }}>&gt;</Text>
                 </View>
               </Pressable>
+            );
+          }}
+        />
+        <FlatList
+          keyExtractor={([d, v]) => `${d.toISOString()}-${v}`}
+          style={{ flex: 1, flexGrow: 1, borderWidth: 3, borderColor: "red" }}
+          data={logs}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "#ccc",
+              }}
+            />
+          )}
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <Text style={{ flex: 1, color: "black" }}>{item[0]}</Text>
+                <Text style={{ color: "#555" }}>{item[1]}</Text>
+              </View>
             );
           }}
         />

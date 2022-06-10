@@ -1,6 +1,6 @@
 # React Native Bitmovin
 
-(Unofficial) React Native package for Bitmovin SDK 3+ and React Native 0.67
+(Unofficial) React Native package for Bitmovin SDK 3+ and React Native 0.68
 
 # Integration
 
@@ -20,16 +20,14 @@ Add bitmovin pod repository to your Podfile:
 Suppy a Bitmovin license key to the `BitmovinVideo` element or with the `BitmovinVideoProvider`:
 
 ```js
-<BitmovinVideoProvider licenseKey="YOUR_LICENSE_KEY">
-  {/* ... */}
-  <BitmovinVideo source={source} />
-  {/* ... */}
-</BitmovinVideoProvider>
+import { BitmovinVideo } from "react-native-bitmovin";
+
+<BitmovinVideo config={{ key: "YOUR_LICENSE_KEY" }} source={source} />;
 ```
 
 # Transpilation
 
-The app only exports a typescript module, enable typescript transpilation to use it.
+The library only exports a typescript module, enable typescript transpilation to use it.
 
 # iOS Example
 
@@ -37,7 +35,9 @@ open `examples/BasicPlayer/ios/BasicPlayer.xcworkspace`
 
 ## TODO
 
-- Android
-- tvOS
-- Web
-- Video items with poster / metadata
+- Playback with source config / player config on all platforms
+- Events
+- Controls show/hide events to coordinate extra controls
+- Props
+  - custom css
+  - localization

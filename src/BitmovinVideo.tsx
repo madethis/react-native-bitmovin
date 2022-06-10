@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, VFC } from "react";
+import React, { useRef, VFC } from "react";
 import { View } from "react-native";
 import { BitmovinVideoProps } from "./BitmovinVideoProps";
 import { usePlayer } from "./player";

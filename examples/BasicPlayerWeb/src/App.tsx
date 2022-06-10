@@ -53,6 +53,16 @@ const App = () => {
                 key: BITMOVIN_LICENSE_KEY,
                 ui: false,
                 playback: { autoplay },
+                style: {},
+              }}
+              onReady={(event) => {
+                console.debug("onReady!", event);
+              }}
+              onSourceLoaded={(event) => {
+                console.debug("onSourceLoaded!", event);
+              }}
+              onTimeChanged={(event) => {
+                console.debug("onTimeChanged", event);
               }}
               source={source}
             />
