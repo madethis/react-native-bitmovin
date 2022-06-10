@@ -29,9 +29,13 @@ import { BitmovinVideo } from "react-native-bitmovin";
 
 The library only exports a typescript module, enable typescript transpilation to use it.
 
-# iOS Example
+# Examples
 
-open `examples/BasicPlayer/ios/BasicPlayer.xcworkspace`
+See [examples](./examples)
+
+# Links
+
+- https://cdn.bitmovin.com/player/web/8/docs/index.html
 
 ## TODO
 
