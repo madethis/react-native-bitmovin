@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
 import {
   Button,
   Dimensions,
@@ -24,6 +24,10 @@ const videos: (BitmovinVideoProps["source"] & { title: string })[] = [
   {
     title: "Sintel",
     dash: "https://bitdash-a.akamaihd.net/content/sintel/sintel.mpd",
+  },
+  {
+    title: "Bad video",
+    dash: "https://www.google.com",
   },
 ];
 
@@ -63,12 +67,10 @@ const App = () => {
     []
   );
 
-  const log = (name: string) => {
-    return () => {
-      console.log("event", name);
-      l(name);
-    };
-  };
+  const log = useCallback((event: any) => {
+    console.log("event", event);
+    l(event.type);
+  }, []);
 
   let w = width;
   let h = (w * 9) / 16;
@@ -102,9 +104,10 @@ const App = () => {
         >
           {show ? (
             <BitmovinVideo
-              onReady={useMemo(() => log("onReady"), [])}
-              // onSourceLoaded={log("onSourceLoaded")}
-              onTimeChanged={log("onTimeChanged")}
+              onReady={log}
+              onSourceLoaded={log}
+              onTimeChanged={log}
+              onError={log}
               config={config}
               source={source}
               style={{

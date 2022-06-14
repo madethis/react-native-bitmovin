@@ -7,39 +7,41 @@ import android.widget.LinearLayout
 import com.bitmovin.player.PlayerView
 import com.bitmovin.player.api.Player
 import com.bitmovin.player.api.PlayerConfig
+import com.bitmovin.player.api.event.Event
 import com.bitmovin.player.api.event.PlayerEvent
-import com.bitmovin.player.api.event.SourceEvent
 import com.bitmovin.player.api.source.SourceConfig
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.events.RCTEventEmitter
 import kotlin.properties.Delegates
+import kotlin.reflect.KClass
 
 const val TAG = "BitmovinVideoView"
 
 data class Config(val playerConfig: PlayerConfig)
+
+val eventKlassMap = eventMap.toList().associate { (k, v) -> k.substring(2).lowercase() to v }
+val klassEventMap = eventKlassMap.toList().associate { (k, v) -> v to k }
+
 /**
  * Heavily inspired by
  * https://github.com/react-native-video/react-native-video/blob/master/android-exoplayer/src/main/java/com/brentvatne/exoplayer/ReactExoplayerView.java
  */
-class BitmovinVideoView : FrameLayout, LifecycleEventListener {
+class BitmovinVideoView(context: ThemedReactContext) :
+        FrameLayout(context), LifecycleEventListener {
 
     private val eventEmitter: @Suppress("deprecation") RCTEventEmitter
 
-    private var reactContext: ThemedReactContext
+    init {
+        eventEmitter = @Suppress("deprecation") context.getJSModule(RCTEventEmitter::class.java)
+    }
 
     private var playerView: PlayerView? = null
     private var player: Player? = null
 
     private var registeredEvents: Set<String> = mutableSetOf()
-
-    constructor(context: ThemedReactContext) : super(context) {
-        this.reactContext = context
-
-        eventEmitter =
-                @Suppress("deprecation") reactContext.getJSModule(RCTEventEmitter::class.java)
-    }
 
     var source: SourceConfig? by Delegates.observable(null) { _, _, _ -> startPlayer("source") }
     var config: Config? by Delegates.observable(null) { _, _, _ -> startPlayer("config") }
@@ -48,6 +50,7 @@ class BitmovinVideoView : FrameLayout, LifecycleEventListener {
         super.onAttachedToWindow()
         reLayout(playerView)
     }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
     }
@@ -68,31 +71,23 @@ class BitmovinVideoView : FrameLayout, LifecycleEventListener {
                 MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
         )
-        view.layout(
-                view.getLeft(),
-                view.getTop(),
-                view.getMeasuredWidth(),
-                view.getMeasuredHeight()
-        )
+        view.layout(view.left, view.top, view.measuredWidth, view.measuredHeight)
     }
 
     private fun startPlayer(newProp: String) {
-        Log.d(TAG, "start player")
-        val config = this.config
-        if (config == null) {
-            return
-        }
+        Log.d(TAG, "start player $newProp")
+        val config = this.config ?: return
 
         if (playerView == null || newProp == "config") {
 
-            Log.d(TAG, "Creating player view ${config}")
+            Log.d(TAG, "Creating player view $config")
 
-            playerView?.getPlayer()?.pause()
-            playerView?.getPlayer()?.destroy()
+            playerView?.player?.pause()
+            playerView?.player?.destroy()
 
-            val player = Player.create(reactContext, config.playerConfig)
+            val player = Player.create(context, config.playerConfig)
 
-            val view = PlayerView(reactContext, player)
+            val view = PlayerView(context, player)
 
             playerView = view
 
@@ -108,7 +103,7 @@ class BitmovinVideoView : FrameLayout, LifecycleEventListener {
 
         if (newProp == "source") {
             val source = this.source
-            val player = playerView?.getPlayer()
+            val player = playerView?.player
             if (source != null) {
                 player?.load(source)
             } else {
@@ -117,17 +112,24 @@ class BitmovinVideoView : FrameLayout, LifecycleEventListener {
         }
     }
 
-    private fun emitEvent(event: String, data: WritableMap? = null) {
-        Log.d(TAG, "Emitting event $event")
-        @Suppress("deprecation") eventEmitter.receiveEvent(id, event, data)
+    private val onEvent = { event: Event ->
+        val name = klassEventMap[event::class]
+        Log.d(TAG, "Emitting event $name")
+        val data = Arguments.createMap()
+        data.putString("type", name)
+        setEventData(event, data)
+        @Suppress("deprecation") this.eventEmitter.receiveEvent(id, name, data)
     }
 
-    private val onReady = { event: PlayerEvent -> emitEvent("ready") }
-    private val onSourceLoaded = { event: SourceEvent -> emitEvent("sourceloaded") }
+    private fun setEventData(event: Event, data: WritableMap) {
+        if (event is PlayerEvent.TimeChanged) {
+            data.putDouble("time", event.time)
+        }
+    }
 
     fun registerEvents(events: Set<String>) {
         // If player not ready, just set events
-        val player = playerView?.getPlayer()
+        val player = playerView?.player
         if (player == null) {
             registeredEvents = events
             return
@@ -142,35 +144,31 @@ class BitmovinVideoView : FrameLayout, LifecycleEventListener {
         registeredEvents = events
     }
 
-    fun updateEvents(events: Set<String>, add: Boolean) {
-        val player = playerView?.getPlayer()
-        if (player == null) {
-            return
-        }
+    private fun updateEvents(events: Set<String>, add: Boolean) {
+        val player = playerView?.player ?: return
 
-        Log.d(TAG, "Updating events (${add}): ${events}")
+        Log.d(TAG, "Updating events (${add}): $events")
 
         for (event in events) {
-            // Apply event listener change
-            when (event) {
-                "ready" ->
-                        if (add) {
-                            player.on(PlayerEvent.Ready::class, onReady)
-                        } else {
-                            player.off(PlayerEvent.Ready::class, onReady)
-                        }
-                "onSourceLoaded" ->
-                        if (add) {
-                            player.on(SourceEvent.Loaded::class, onSourceLoaded)
-                        } else {
-                            player.off(SourceEvent.Loaded::class, onSourceLoaded)
-                        }
+            val klass: KClass<out Event>? = eventKlassMap[event]
+
+            if (klass == null) {
+                Log.w(TAG, "Unmapped event type: $event")
+                continue
+            }
+
+            if (add) {
+                player.on(klass, onEvent)
+            } else {
+                player.off(klass, onEvent)
             }
         }
     }
 
     fun cleanup() {
-        playerView?.getPlayer()?.pause()
-        playerView?.getPlayer()?.destroy()
+        playerView?.player?.apply {
+            pause()
+            destroy()
+        }
     }
 }
