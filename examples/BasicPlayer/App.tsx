@@ -172,7 +172,9 @@ const App = () => {
                   flexDirection: "row",
                 }}
               >
-                <Text style={{ flex: 1, color: "black" }}>{item[0]}</Text>
+                <Text style={{ flex: 1, color: "black" }}>
+                  {item[0].toISOString()}
+                </Text>
                 <Text style={{ color: "#555" }}>{item[1]}</Text>
               </View>
             );
