@@ -6,6 +6,10 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3BEDE9A22859D023001C91AF /* RNTBitmovinVideoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BEDE99F2859D023001C91AF /* RNTBitmovinVideoManager.m */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		58B511D91A9E6C8500147676 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -20,9 +24,10 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNTBitmovin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNTBitmovin.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E9761873282682A300AE2FA0 /* RNTBitmovinVideoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNTBitmovinVideoManager.swift; sourceTree = "<group>"; };
-		E9761874282682A300AE2FA0 /* RNTBitmovinVideoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTBitmovinVideoManager.m; sourceTree = "<group>"; };
-		F4FF95D5245B92E700C19C63 /* Bitmovin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bitmovin-Bridging-Header.h"; sourceTree = "<group>"; };
+		3BEDE99E2859D023001C91AF /* tools */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tools; sourceTree = "<group>"; };
+		3BEDE99F2859D023001C91AF /* RNTBitmovinVideoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTBitmovinVideoManager.m; sourceTree = "<group>"; };
+		3BEDE9A02859D023001C91AF /* player */ = {isa = PBXFileReference; lastKnownFileType = folder; path = player; sourceTree = "<group>"; };
+		3BEDE9A12859D023001C91AF /* Bitmovin-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bitmovin-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,9 +52,10 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				E9761874282682A300AE2FA0 /* RNTBitmovinVideoManager.m */,
-				E9761873282682A300AE2FA0 /* RNTBitmovinVideoManager.swift */,
-				F4FF95D5245B92E700C19C63 /* Bitmovin-Bridging-Header.h */,
+				3BEDE99E2859D023001C91AF /* tools */,
+				3BEDE9A02859D023001C91AF /* player */,
+				3BEDE9A12859D023001C91AF /* Bitmovin-Bridging-Header.h */,
+				3BEDE99F2859D023001C91AF /* RNTBitmovinVideoManager.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -111,6 +117,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BEDE9A22859D023001C91AF /* RNTBitmovinVideoManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
