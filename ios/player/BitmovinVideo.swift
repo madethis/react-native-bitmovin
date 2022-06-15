@@ -45,9 +45,9 @@ class BitmovinVideo: UIView {
     }
     
     /**
-     * A list of all events
+     *  Function to call when time has changed
      */
-    @objc var _events: NSArray?
+    @objc var onTimeChanged: RCTBubblingEventBlock?
     
     /**
      * De-nit

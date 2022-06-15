@@ -18,9 +18,7 @@ extension BitmovinVideo: PlayerListener {
         dump(event, name: "[Player Event]", maxDepth: 2)
         
         if let timeChanged = event as? TimeChangedEvent {
-            // self.onTimeChanged?(["currentTime": timeChanged.currentTime])
+            self.onTimeChanged?(["currentTime": timeChanged.currentTime])
         }
-        
-        print(self._events)
     }
 }

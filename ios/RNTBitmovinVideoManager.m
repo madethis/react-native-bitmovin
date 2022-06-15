@@ -23,10 +23,8 @@ RCT_EXPORT_VIEW_PROPERTY(source, NSDictionary)
 RCT_EXPORT_VIEW_PROPERTY(config, NSDictionary)
 
 /**
- * Events
- *
- * A list of all events that are subcribed to
+ * Events goes here
  */
-RCT_EXPORT_VIEW_PROPERTY(_events, NSArray)
+RCT_EXPORT_VIEW_PROPERTY(onTimeChanged, RCTBubblingEventBlock)
 
 @end
