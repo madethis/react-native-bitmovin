@@ -41,6 +41,7 @@ See [examples](./examples)
 
 - Playback with source config / player config on all platforms
 - Events
+  - player on error example, how?
 - Controls show/hide events to coordinate extra controls
 - Props
   - custom css

@@ -14,6 +14,12 @@ type NativeBitmovinVideoProps = BitmovinVideoProps & {
   _events: Lowercase<BitmovinEvent>[];
 };
 
+function mapNativeEvent(handler: (event: any) => void) {
+  return (event: { nativeEvent: any }) => {
+    return handler(event.nativeEvent);
+  };
+}
+
 const NativeBitmovinVideo =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<NativeBitmovinVideoProps>(ComponentName)
@@ -21,23 +27,33 @@ const NativeBitmovinVideo =
         throw new Error(LINKING_ERROR);
       };
 
-export const BitmovinVideo: VoidFunctionComponent<BitmovinVideoProps> = (
-  props
-) => {
-  const events = Object.entries(props).flatMap(([key]) => {
+export const BitmovinVideo: VoidFunctionComponent<BitmovinVideoProps> = ({
+  source,
+  config,
+  ...props
+}) => {
+  const events = [];
+  const childProps: { [key: string]: any } = {};
+
+  for (const [key, value] of Object.entries(props)) {
+    childProps[key] = value;
+
     if (key.startsWith("on")) {
-      return [key.substring(2).toLowerCase()];
+      events.push(key.substring(2).toLowerCase());
+      if (typeof value === "function") {
+        childProps[key] = mapNativeEvent(value);
+      }
     }
-
-    return [];
-  });
-
-  console.log("Subscribing to events:", events);
+  }
 
   return (
     <NativeBitmovinVideo
-      {...props}
+      // Config as earliest prop
+      config={config}
       _events={events as Lowercase<BitmovinEvent>[]}
+      {...childProps}
+      // Source as last prop
+      source={source}
     />
   );
 };
