@@ -10,6 +10,7 @@ import { BitmovinVideoProps } from "./BitmovinVideoProps";
 
 import PolyfillModule from "bitmovin-player/modules/bitmovinplayer-polyfill";
 import EngineBitmovinModule from "bitmovin-player/modules/bitmovinplayer-engine-bitmovin";
+import EngineNativeModule from "bitmovin-player/modules/bitmovinplayer-engine-native";
 import MseRendererModule from "bitmovin-player/modules/bitmovinplayer-mserenderer";
 import HlsModule from "bitmovin-player/modules/bitmovinplayer-hls";
 import XmlModule from "bitmovin-player/modules/bitmovinplayer-xml";
@@ -22,6 +23,7 @@ import SubtitlesCEA608Module from "bitmovin-player/modules/bitmovinplayer-subtit
 import StyleModule from "bitmovin-player/modules/bitmovinplayer-style";
 
 Player.addModule(EngineBitmovinModule);
+Player.addModule(EngineNativeModule);
 Player.addModule(PolyfillModule);
 Player.addModule(MseRendererModule);
 Player.addModule(HlsModule);
