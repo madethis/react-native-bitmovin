@@ -83,6 +83,8 @@ extension BitmovinVideo: PlayerListener {
             self.onControlsShow?(["type": "controlsshow"])
         case let sourceError as SourceErrorEvent:
             self.onSourceError?(["type": "sourceerror", "code": sourceError.code, "message": sourceError.message])
+        case is DownloadFinishedEvent:
+            self.onDownloadFinished?(["type": "downloadfinished"])
         default:
             log("Unhandled event: \(event.name)")
         }

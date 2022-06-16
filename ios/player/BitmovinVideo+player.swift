@@ -47,11 +47,26 @@ extension BitmovinVideo {
         self.playerView = PlayerView(player: self.player!, frame: self.bounds)
         self.playerView!.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         
-        
         self.addSubview(self.playerView!)
         self.bringSubviewToFront(self.playerView!)
         
         let sourceConfig = SourceConfig(url: URL(string: streamUrl)!, type: .hls)
+        
+        if let title = source["title"] as? String {
+            sourceConfig.title = title
+        }
+        
+        if let description = source["description"] as? String {
+            sourceConfig.sourceDescription = description
+        }
+        
+        if let poster = source["poster"] as? String, let posterURL = URL(string: poster) {
+            sourceConfig.posterSource = posterURL
+        }
+        
+        if let drmDict = source["drm"] as? Dictionary<String, Any> {
+            sourceConfig.drmConfig = DrmConfig.fromDict(dict: drmDict)
+        }
         
         self.player!.load(sourceConfig: sourceConfig)
     }

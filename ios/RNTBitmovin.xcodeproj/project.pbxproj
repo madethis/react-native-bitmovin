@@ -28,6 +28,7 @@
 		3BEDE99F2859D023001C91AF /* RNTBitmovinVideoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTBitmovinVideoManager.m; sourceTree = "<group>"; };
 		3BEDE9A02859D023001C91AF /* player */ = {isa = PBXFileReference; lastKnownFileType = folder; path = player; sourceTree = "<group>"; };
 		3BEDE9A12859D023001C91AF /* Bitmovin-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bitmovin-Bridging-Header.h"; sourceTree = "<group>"; };
+		3BEDE9A7285B3C1A001C91AF /* extensions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = extensions; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +53,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				3BEDE9A7285B3C1A001C91AF /* extensions */,
 				3BEDE99E2859D023001C91AF /* tools */,
 				3BEDE9A02859D023001C91AF /* player */,
 				3BEDE9A12859D023001C91AF /* Bitmovin-Bridging-Header.h */,
