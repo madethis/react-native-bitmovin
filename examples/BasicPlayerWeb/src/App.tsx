@@ -29,6 +29,7 @@ const App = () => {
   const [autoplay, setAutoplay] = useState(true);
   const [show, setShow] = useState(true);
   const [source, setSource] = useState(videos[0]);
+  const [ui, setUi] = useState<boolean>(true);
 
   const log = useCallback((event: any) => {
     console.debug("event", event);
@@ -55,7 +56,7 @@ const App = () => {
             <BitmovinVideo
               config={{
                 key: BITMOVIN_LICENSE_KEY,
-                ui: false,
+                ui: ui ? undefined : false,
                 playback: { autoplay },
               }}
               onReady={log}
@@ -70,6 +71,12 @@ const App = () => {
             title={show ? "Deactivate player" : "Activate player"}
             onPress={() => {
               setShow((v) => !v);
+            }}
+          />
+          <Button
+            title={ui ? "Deactivate UI" : "Activate UI"}
+            onPress={() => {
+              setUi((v) => !v);
             }}
           />
           <Button

@@ -16,7 +16,7 @@ export type BitmovinVideoPlayerConfig = Simplify<
     /**
      * Player UI config
      */
-    ui?: false | BitmovinVideoUIConfig;
+    ui?: boolean | BitmovinVideoUIConfig;
     playback?: BitmovinVideoPlaybackConfig;
   }
 >;

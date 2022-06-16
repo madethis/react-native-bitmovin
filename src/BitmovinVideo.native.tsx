@@ -81,8 +81,8 @@ export const BitmovinVideo: VoidFunctionComponent<BitmovinVideoProps> = ({
 function buildStyleConfig(
   config: BitmovinVideoPlayerConfig
 ): NativeProps["config"]["style"] {
-  if (config.ui === false) {
-    return { isUiEnabled: false };
+  if (typeof config.ui === "boolean") {
+    return { isUiEnabled: config.ui };
   }
 
   return {
