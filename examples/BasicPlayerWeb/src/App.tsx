@@ -57,7 +57,6 @@ const App = () => {
                 key: BITMOVIN_LICENSE_KEY,
                 ui: false,
                 playback: { autoplay },
-                style: {},
               }}
               onReady={log}
               onSourceLoaded={log}
