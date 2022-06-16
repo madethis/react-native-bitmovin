@@ -21,8 +21,6 @@ export type BitmovinVideoPlayerConfig = Simplify<
   }
 >;
 
-// export type BitmovinVideoStyleConfig = Simplify<StyleConfig>;
-
 /**
  * Bitmovin UI config
  *
@@ -39,11 +37,9 @@ export type BitmovinVideoPlayerConfig = Simplify<
  */
 export type BitmovinVideoUIConfig = {
   /**
-   * Use system UI on supported platforms. Use other settings on other platforms
-   *
-   * See tvOS https://cdn.bitmovin.com/player/ios/3/docs/Classes/StyleConfig.html#/c:@M@BitmovinPlayer@objc(cs)BMPStyleConfig(py)userInterfaceConfig
+   * See https://cdn.bitmovin.com/player/ios/3/docs/Enums/UserInterfaceType.html#/c:@M@BitmovinPlayer@E@BMPUserInterfaceType@BMPUserInterfaceTypeSubtitle
    */
-  system?: true | { [key: string]: any };
+  type?: "system" | "bitmovin" | "subtitle";
   cssUri?: string;
   jsUri?: string;
   extraCssUri?: string;

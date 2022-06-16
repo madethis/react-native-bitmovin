@@ -9,11 +9,12 @@ import {
 type NativeProps = BitmovinVideoProps & {
   _events: Lowercase<BitmovinVideoEvent>[];
   config: Omit<BitmovinVideoPlayerConfig, "ui" | "style"> & {
-    style: {
+    style?: {
       isUiEnabled?: boolean;
       playerUiJs?: string;
       playerUiCss?: string;
       supplementalPlayerUiCss?: string;
+      userInterfaceType?: "system" | "bitmovin" | "subtitle";
     };
   };
 };
@@ -59,7 +60,7 @@ export const BitmovinVideo: VoidFunctionComponent<BitmovinVideoProps> = ({
   }
 
   const nativeConfig = useMemo(() => {
-    const styleConfig = buildStyleConfig(config);
+    const styleConfig = buildStyleConfig(config.ui);
     return {
       ...config,
       style: styleConfig,
@@ -79,16 +80,21 @@ export const BitmovinVideo: VoidFunctionComponent<BitmovinVideoProps> = ({
 };
 
 function buildStyleConfig(
-  config: BitmovinVideoPlayerConfig
+  ui: BitmovinVideoPlayerConfig["ui"]
 ): NativeProps["config"]["style"] {
-  if (typeof config.ui === "boolean") {
-    return { isUiEnabled: config.ui };
+  if (typeof ui === "boolean") {
+    return { isUiEnabled: ui };
+  }
+
+  if (!ui) {
+    return undefined;
   }
 
   return {
     isUiEnabled: true,
-    playerUiJs: config.ui?.jsUri,
-    playerUiCss: config.ui?.cssUri,
-    supplementalPlayerUiCss: config.ui?.extraCssUri,
+    userInterfaceType: ui.type,
+    playerUiJs: ui.jsUri,
+    playerUiCss: ui.cssUri,
+    supplementalPlayerUiCss: ui.extraCssUri,
   };
 }
