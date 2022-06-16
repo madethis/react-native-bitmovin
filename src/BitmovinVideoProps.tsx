@@ -36,7 +36,7 @@ type BitmovinVideoSourceConfig = Simplify<
     | "progressive"
     | "title"
     | "description"
-    | "drm"
+    // | "drm"
     | "metadata"
     | "poster"
   >
