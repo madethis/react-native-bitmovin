@@ -1,6 +1,6 @@
 import React, { VoidFunctionComponent } from "react";
 import { Platform, UIManager, requireNativeComponent } from "react-native";
-import { BitmovinEvent, BitmovinVideoProps } from "./BitmovinVideoProps";
+import { BitmovinVideoEvent, BitmovinVideoProps } from "./BitmovinVideoProps";
 
 const LINKING_ERROR =
   `The package 'react-native-bitmovin' doesn't seem to be linked. Make sure: \n\n` +
@@ -11,7 +11,7 @@ const LINKING_ERROR =
 const ComponentName = "RNTBitmovinVideo";
 
 type NativeBitmovinVideoProps = BitmovinVideoProps & {
-  _events: Lowercase<BitmovinEvent>[];
+  _events: Lowercase<BitmovinVideoEvent>[];
 };
 
 function mapNativeEvent(handler: (event: any) => void) {

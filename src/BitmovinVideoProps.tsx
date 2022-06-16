@@ -1,26 +1,64 @@
-import { PlayerConfig, PlayerEventMap, SourceConfig } from "bitmovin-player";
+import {
+  PlaybackConfig,
+  PlayerConfig,
+  PlayerEventMap,
+  SourceConfig,
+  StyleConfig,
+} from "bitmovin-player";
 import type { PlayerEvent as PlayerEventEnum } from "bitmovin-player";
+
+import { Simplify } from "type-fest";
 
 import { ViewStyle } from "react-native";
 
-export type BitmovinVideoProps = {
-  source: Pick<
+export type BitmovinVideoPlayerConfig = Simplify<
+  Pick<PlayerConfig, "key"> & {
+    style?: BitmovinVideoStyleConfig;
+    playback?: BitmovinVideoPlaybackConfig;
+  }
+>;
+
+export type BitmovinVideoStyleConfig = Simplify<StyleConfig>;
+
+export type BitmovinVideoPlaybackConfig = Simplify<
+  Pick<
+    PlaybackConfig,
+    "autoplay" | "muted" | "timeShift" | "seeking" | "audioLanguage"
+  >
+>;
+
+type BitmovinVideoSourceConfig = Simplify<
+  Pick<
     SourceConfig,
-    "dash" | "hls" | "smooth" | "progressive" | "title" | "description"
-  >;
-  style?: ViewStyle;
-  config: Pick<PlayerConfig, "key" | "playback" | "ui" | "style">;
-} & BitmovinVideoEventProps;
+    | "dash"
+    | "hls"
+    | "smooth"
+    | "progressive"
+    | "title"
+    | "description"
+    | "drm"
+    | "metadata"
+    | "poster"
+  >
+>;
+
+export type BitmovinVideoProps = Simplify<
+  {
+    source: BitmovinVideoSourceConfig;
+    style?: ViewStyle;
+    config: BitmovinVideoPlayerConfig;
+  } & BitmovinVideoEventProps
+>;
 
 export type BitmovinVideoEventProps = {
-  [key in BitmovinEvent as `on${key}`]?: (
+  [key in BitmovinVideoEvent as `on${key}`]?: (
     event: key extends keyof typeof PlayerEventEnum
       ? PlayerEventMap[typeof PlayerEventEnum[key]]
       : any
   ) => void;
 };
 
-export type BitmovinEvent =
+export type BitmovinVideoEvent =
   | "Ready"
   | "Play"
   | "Playing"
@@ -98,5 +136,3 @@ export type BitmovinEvent =
   | "ControlsHide"
   | "ControlsShow"
   | "SourceError";
-
-export type BitmovinVideoPlayerConfig = Omit<PlayerConfig, "events">;
