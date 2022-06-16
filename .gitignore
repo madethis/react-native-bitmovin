@@ -10,3 +10,5 @@ local.properties
 *.hprof
 
 bitmovin-license-key.ts
+
+.DS_Store
