@@ -13,12 +13,41 @@ import { ViewStyle } from "react-native";
 
 export type BitmovinVideoPlayerConfig = Simplify<
   Pick<PlayerConfig, "key"> & {
-    style?: BitmovinVideoStyleConfig;
+    /**
+     * Player UI config
+     */
+    ui?: false | BitmovinVideoUIConfig;
     playback?: BitmovinVideoPlaybackConfig;
   }
 >;
 
-export type BitmovinVideoStyleConfig = Simplify<StyleConfig>;
+// export type BitmovinVideoStyleConfig = Simplify<StyleConfig>;
+
+/**
+ * Bitmovin UI config
+ *
+ * ## Default cases
+ *
+ * - tvOS uses system ui
+ * - iOS uses bitmovin ui
+ * - Android uses bitmovin ui
+ *
+ * ## References
+ *
+ * - iOS / tvOS: https://cdn.bitmovin.com/player/ios/3/docs/Classes/StyleConfig.html#/c:@M@BitmovinPlayer@objc(cs)BMPStyleConfig(py)userInterfaceType
+ * - web: https://github.com/bitmovin/bitmovin-player-ui
+ */
+export type BitmovinVideoUIConfig = {
+  /**
+   * Use system UI on supported platforms. Use other settings on other platforms
+   *
+   * See tvOS https://cdn.bitmovin.com/player/ios/3/docs/Classes/StyleConfig.html#/c:@M@BitmovinPlayer@objc(cs)BMPStyleConfig(py)userInterfaceConfig
+   */
+  system?: true | { [key: string]: any };
+  cssUri?: string;
+  jsUri?: string;
+  extraCssUri?: string;
+};
 
 export type BitmovinVideoPlaybackConfig = Simplify<
   Pick<

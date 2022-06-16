@@ -1,6 +1,22 @@
-import React, { VoidFunctionComponent } from "react";
+import React, { VoidFunctionComponent, useMemo } from "react";
 import { Platform, UIManager, requireNativeComponent } from "react-native";
-import { BitmovinVideoEvent, BitmovinVideoProps } from "./BitmovinVideoProps";
+import {
+  BitmovinVideoEvent,
+  BitmovinVideoPlayerConfig,
+  BitmovinVideoProps,
+} from "./BitmovinVideoProps";
+
+type NativeProps = BitmovinVideoProps & {
+  _events: Lowercase<BitmovinVideoEvent>[];
+  config: Omit<BitmovinVideoPlayerConfig, "ui" | "style"> & {
+    style: {
+      isUiEnabled?: boolean;
+      playerUiJs?: string;
+      playerUiCss?: string;
+      supplementalPlayerUiCss?: string;
+    };
+  };
+};
 
 const LINKING_ERROR =
   `The package 'react-native-bitmovin' doesn't seem to be linked. Make sure: \n\n` +
@@ -10,10 +26,6 @@ const LINKING_ERROR =
 
 const ComponentName = "RNTBitmovinVideo";
 
-type NativeBitmovinVideoProps = BitmovinVideoProps & {
-  _events: Lowercase<BitmovinVideoEvent>[];
-};
-
 function mapNativeEvent(handler: (event: any) => void) {
   return (event: { nativeEvent: any }) => {
     return handler(event.nativeEvent);
@@ -22,7 +34,7 @@ function mapNativeEvent(handler: (event: any) => void) {
 
 const NativeBitmovinVideo =
   UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent<NativeBitmovinVideoProps>(ComponentName)
+    ? requireNativeComponent<NativeProps>(ComponentName)
     : () => {
         throw new Error(LINKING_ERROR);
       };
@@ -46,14 +58,37 @@ export const BitmovinVideo: VoidFunctionComponent<BitmovinVideoProps> = ({
     }
   }
 
+  const nativeConfig = useMemo(() => {
+    const styleConfig = buildStyleConfig(config);
+    return {
+      ...config,
+      style: styleConfig,
+    };
+  }, [config]);
+
   return (
     <NativeBitmovinVideo
       // Config as earliest prop
-      config={config}
-      _events={events as Lowercase<BitmovinEvent>[]}
+      config={nativeConfig}
+      _events={events as Lowercase<BitmovinVideoEvent>[]}
       {...childProps}
       // Source as last prop
       source={source}
     />
   );
 };
+
+function buildStyleConfig(
+  config: BitmovinVideoPlayerConfig
+): NativeProps["config"]["style"] {
+  if (config.ui === false) {
+    return { isUiEnabled: false };
+  }
+
+  return {
+    isUiEnabled: true,
+    playerUiJs: config.ui?.jsUri,
+    playerUiCss: config.ui?.cssUri,
+    supplementalPlayerUiCss: config.ui?.extraCssUri,
+  };
+}
