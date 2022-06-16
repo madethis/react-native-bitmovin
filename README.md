@@ -17,14 +17,6 @@ Add bitmovin pod repository to your Podfile:
   platform :ios, '12.0'
 ```
 
-Suppy a Bitmovin license key to the `BitmovinVideo` element or with the `BitmovinVideoProvider`:
-
-```js
-import { BitmovinVideo } from "react-native-bitmovin";
-
-<BitmovinVideo config={{ key: "YOUR_LICENSE_KEY" }} source={source} />;
-```
-
 # Transpilation
 
 The library only exports a typescript module, enable typescript transpilation to use it.
@@ -39,7 +31,6 @@ See [examples](./examples)
 
 ## TODO
 
-- Playback with source config / player config on all platforms
 - Events
   - player on error example, how?
 - Controls show/hide events to coordinate extra controls
