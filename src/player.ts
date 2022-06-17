@@ -1,12 +1,16 @@
+import { useMemo } from "react";
 import {
   Player,
   PlayerAPI,
   PlayerEvent,
 } from "bitmovin-player/modules/bitmovinplayer-core";
-import { UIFactory } from "bitmovin-player-ui";
 import { useRef, useEffect, MutableRefObject } from "react";
 import { View } from "react-native";
-import { BitmovinVideoProps } from "./BitmovinVideoProps";
+import {
+  BitmovinVideoPlayerConfig,
+  BitmovinVideoProps,
+  BitmovinVideoSourceConfig,
+} from "./BitmovinVideoProps";
 
 import PolyfillModule from "bitmovin-player/modules/bitmovinplayer-polyfill";
 import EngineBitmovinModule from "bitmovin-player/modules/bitmovinplayer-engine-bitmovin";
@@ -21,6 +25,7 @@ import ContainerMp4Module from "bitmovin-player/modules/bitmovinplayer-container
 import SubtitlesModule from "bitmovin-player/modules/bitmovinplayer-subtitles";
 import SubtitlesCEA608Module from "bitmovin-player/modules/bitmovinplayer-subtitles-cea608";
 import StyleModule from "bitmovin-player/modules/bitmovinplayer-style";
+import { UIFactory, UIManager } from "bitmovin-player-ui";
 
 Player.addModule(EngineBitmovinModule);
 Player.addModule(EngineNativeModule);
@@ -47,12 +52,15 @@ export const usePlayer = ({
     [event: string]: (event: any) => void;
   }>({});
 
-  const configHash = JSON.stringify(config);
+  const [configHash, configHashWithoutUi] = useMemo(() => {
+    const { ui: _ui, ...rest } = config;
+    return [JSON.stringify(config), JSON.stringify(rest)];
+  }, [config]);
 
   useEffect(() => {
+    console.log("Sync player!");
     // https://cdn.bitmovin.com/player/web/8/docs/index.html
     const newPlayer = new Player(container.current as any, config);
-    UIFactory.buildDefaultUI(newPlayer);
     player.current = newPlayer;
     previousEventHandlersRef.current = {};
 
@@ -60,11 +68,21 @@ export const usePlayer = ({
       newPlayer.pause();
       newPlayer.destroy();
     };
-  }, [configHash]);
+  }, [configHashWithoutUi]);
+
+  useSyncUi(player, config, configHash);
 
   // NB. Must be after player ref update effect to catch first player instance
-  useUpdateEventHandlers({ player, props: rest, previousEventHandlersRef });
+  useSyncEventHandlers(player, rest, previousEventHandlersRef);
 
+  useSyncSource(player, source, configHash);
+};
+
+function useSyncSource(
+  player: MutableRefObject<PlayerAPI | undefined>,
+  source: BitmovinVideoSourceConfig,
+  configHash: string
+) {
   useEffect(() => {
     if (!player.current) {
       return;
@@ -75,23 +93,16 @@ export const usePlayer = ({
     } else {
       player.current?.unload();
     }
-  }, [
-    configHash, // Trigger load on changed config as well
-    source,
-  ]);
-};
+  }, [configHash, source]);
+}
 
-function useUpdateEventHandlers({
-  player,
-  props,
-  previousEventHandlersRef,
-}: {
-  player: MutableRefObject<PlayerAPI | undefined>;
-  props: Partial<BitmovinVideoProps>;
+function useSyncEventHandlers(
+  player: MutableRefObject<PlayerAPI | undefined>,
+  props: Partial<BitmovinVideoProps>,
   previousEventHandlersRef: MutableRefObject<{
     [event: string]: (event: any) => void;
-  }>;
-}) {
+  }>
+) {
   const eventHandlersChangedRef = useRef<number>(0);
   const ob = Object.entries(props);
   const entries = ob
@@ -138,4 +149,32 @@ function useUpdateEventHandlers({
       }
     }
   }, [eventHandlersChangedRef.current]);
+}
+
+function useSyncUi(
+  player: MutableRefObject<PlayerAPI | undefined>,
+  config: BitmovinVideoPlayerConfig,
+  configHash: string
+) {
+  const uiManagerRef = useRef<UIManager>();
+
+  const uiHash = useMemo(() => {
+    return JSON.stringify(config.ui);
+  }, [configHash]);
+
+  useEffect(() => {
+    const p = player.current;
+
+    uiManagerRef.current?.release();
+    if (!p) {
+      return;
+    }
+
+    const showUi = config.ui !== false;
+
+    // New player, no ui
+    if (showUi) {
+      uiManagerRef.current = UIFactory.buildDefaultUI(p);
+    }
+  }, [configHash, uiHash]);
 }

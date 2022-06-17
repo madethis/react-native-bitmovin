@@ -52,7 +52,7 @@ export type BitmovinVideoPlaybackConfig = Simplify<
   >
 >;
 
-type BitmovinVideoSourceConfig = Simplify<
+export type BitmovinVideoSourceConfig = Simplify<
   Pick<
     SourceConfig,
     | "dash"

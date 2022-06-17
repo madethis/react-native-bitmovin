@@ -29,7 +29,7 @@ const App = () => {
   const [autoplay, setAutoplay] = useState(true);
   const [show, setShow] = useState(true);
   const [source, setSource] = useState(videos[0]);
-  const [ui, setUi] = useState<boolean>(true);
+  const [ui, setUi] = useState<boolean>(false);
 
   const log = useCallback((event: any) => {
     console.debug("event", event);
@@ -61,7 +61,7 @@ const App = () => {
               }}
               onReady={log}
               onSourceLoaded={log}
-              onTimeChanged={log}
+              // onTimeChanged={log}
               source={source}
             />
           )}
