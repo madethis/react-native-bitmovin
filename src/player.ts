@@ -98,7 +98,7 @@ export const usePlayer = ({
 };
 
 function useSyncSource(
-  player: MutableRefObject<PlayerAPI | undefined>,
+  player: MutableRefObject<PlayerAPI | null>,
   source: BitmovinVideoSourceConfig,
   configHash: string
 ) {
@@ -116,7 +116,7 @@ function useSyncSource(
 }
 
 function useSyncEventHandlers(
-  player: MutableRefObject<PlayerAPI | undefined>,
+  player: MutableRefObject<PlayerAPI | null>,
   props: Partial<BitmovinVideoProps>,
   previousEventHandlersRef: MutableRefObject<{
     [event: string]: (event: any) => void;
@@ -171,7 +171,7 @@ function useSyncEventHandlers(
 }
 
 function useSyncUi(
-  player: MutableRefObject<PlayerAPI | undefined>,
+  player: MutableRefObject<PlayerAPI | null>,
   config: BitmovinVideoPlayerConfig,
   configHash: string
 ) {
