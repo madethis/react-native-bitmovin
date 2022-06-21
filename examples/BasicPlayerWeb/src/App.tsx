@@ -29,7 +29,7 @@ const App = () => {
   const [autoplay, setAutoplay] = useState(true);
   const [show, setShow] = useState(true);
   const [source, setSource] = useState(videos[0]);
-  const [ui, setUi] = useState<boolean>(false);
+  const [ui, setUi] = useState<boolean>(true);
   const [muted, setMuted] = useState<boolean>(true);
 
   const log = useCallback((event: any) => {

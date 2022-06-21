@@ -34,9 +34,11 @@ const NativeBitmovinVideo =
         throw new Error(LINKING_ERROR);
       };
 
-export const BitmovinVideoNativeWrapper: VoidFunctionComponent<
-  BitmovinVideoProps
-> = ({ source, config, ...props }) => {
+export const BitmovinVideo: VoidFunctionComponent<BitmovinVideoProps> = ({
+  source,
+  config,
+  ...props
+}) => {
   const events = [];
   const childProps: { [key: string]: any } = {};
 
