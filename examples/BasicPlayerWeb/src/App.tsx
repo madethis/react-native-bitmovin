@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useReducer, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 import {
   Button,
   FlatList,
@@ -30,6 +30,7 @@ const App = () => {
   const [show, setShow] = useState(true);
   const [source, setSource] = useState(videos[0]);
   const [ui, setUi] = useState<boolean>(false);
+  const [muted, setMuted] = useState<boolean>(true);
 
   const log = useCallback((event: any) => {
     console.debug("event", event);
@@ -57,7 +58,7 @@ const App = () => {
               config={{
                 key: BITMOVIN_LICENSE_KEY,
                 ui: ui ? undefined : false,
-                playback: { autoplay },
+                playback: { autoplay, muted },
               }}
               onReady={log}
               onSourceLoaded={log}
@@ -77,6 +78,12 @@ const App = () => {
             title={ui ? "Deactivate UI" : "Activate UI"}
             onPress={() => {
               setUi((v) => !v);
+            }}
+          />
+          <Button
+            title={muted ? "Unmute" : "Mute"}
+            onPress={() => {
+              setMuted((v) => !v);
             }}
           />
           <Button
