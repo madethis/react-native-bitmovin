@@ -75,7 +75,7 @@ export const usePlayer = ({
   // NB. Must be after player ref update effect to catch first player instance
   useSyncEventHandlers(player, rest, previousEventHandlersRef);
 
-  useSyncSource(player, source, configHash);
+  useSyncSource(player, source, configHashWithoutUi);
 };
 
 function useSyncSource(
