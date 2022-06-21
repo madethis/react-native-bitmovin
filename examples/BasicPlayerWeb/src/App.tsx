@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useState } from "react";
+import { useCallback, useReducer, useRef, useState } from "react";
 import {
   Button,
   FlatList,
@@ -8,7 +8,11 @@ import {
   Text,
   View,
 } from "react-native";
-import { BitmovinVideo, BitmovinVideoProps } from "react-native-bitmovin";
+import {
+  BitmovinVideo,
+  BitmovinVideoProps,
+  BitmovinVideoRef,
+} from "react-native-bitmovin";
 
 // @ts-ignore
 import { BITMOVIN_LICENSE_KEY } from "./bitmovin-license-key";
@@ -25,12 +29,12 @@ const videos: (BitmovinVideoProps["source"] & { title: string })[] = [
 ];
 
 const App = () => {
+  const ref = useRef<BitmovinVideoRef>(null!);
   const [_, render] = useReducer((state) => state + 1, 0);
   const [autoplay, setAutoplay] = useState(true);
   const [show, setShow] = useState(true);
   const [source, setSource] = useState(videos[0]);
   const [ui, setUi] = useState<boolean>(true);
-  const [muted, setMuted] = useState<boolean>(true);
 
   const log = useCallback((event: any) => {
     console.debug("event", event);
@@ -38,7 +42,7 @@ const App = () => {
 
   const backgroundStyle = {
     flex: 1,
-    backgroundColor: "#eee",
+    backgroundColor: "#222",
   };
 
   return (
@@ -55,10 +59,11 @@ const App = () => {
         <View style={{ width: "80%" }}>
           {show && (
             <BitmovinVideo
+              ref={ref}
               config={{
                 key: BITMOVIN_LICENSE_KEY,
                 ui: ui ? undefined : false,
-                playback: { autoplay, muted },
+                playback: { autoplay, muted: true },
               }}
               onReady={log}
               onSourceLoaded={log}
@@ -80,12 +85,42 @@ const App = () => {
               setUi((v) => !v);
             }}
           />
-          <Button
-            title={muted ? "Unmute" : "Mute"}
-            onPress={() => {
-              setMuted((v) => !v);
-            }}
-          />
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+              <Button
+                title="Play"
+                onPress={() => {
+                  ref.current?.play();
+                }}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Button
+                title="Pause"
+                onPress={() => {
+                  ref.current?.pause();
+                }}
+              />
+            </View>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+              <Button
+                title="Mute"
+                onPress={() => {
+                  ref.current?.mute();
+                }}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Button
+                title="Unmute"
+                onPress={() => {
+                  ref.current?.unmute();
+                }}
+              />
+            </View>
+          </View>
           <Button
             title={autoplay ? "Disable autoplay" : "Enable autoplay"}
             onPress={() => {

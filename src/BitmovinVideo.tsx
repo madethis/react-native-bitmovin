@@ -1,14 +1,16 @@
-import React, { useRef, VFC } from "react";
+import React, { forwardRef, useRef, VFC } from "react";
 import { View } from "react-native";
-import { BitmovinVideoProps } from "./BitmovinVideoProps";
+import { BitmovinVideoProps, BitmovinVideoRef } from "./BitmovinVideoProps";
 import { usePlayer } from "./player";
 // @ts-ignore
 import("bitmovin-player-ui/dist/css/bitmovinplayer-ui.min.css");
 
-export const BitmovinVideo: VFC<BitmovinVideoProps> = ({ style, ...props }) => {
-  const container = useRef<View>(undefined!);
+export const BitmovinVideo = forwardRef<BitmovinVideoRef, BitmovinVideoProps>(
+  ({ style, ...props }, ref) => {
+    const container = useRef<View>(undefined!);
 
-  usePlayer({ container, ...props });
+    usePlayer({ container, ...props, ref });
 
-  return <View ref={container} style={style} />;
-};
+    return <View ref={container} style={style} />;
+  }
+);

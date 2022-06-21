@@ -1,15 +1,20 @@
 import {
   PlaybackConfig,
+  PlayerAPI,
   PlayerConfig,
   PlayerEventMap,
   SourceConfig,
-  StyleConfig,
 } from "bitmovin-player";
 import type { PlayerEvent as PlayerEventEnum } from "bitmovin-player";
 
 import { Simplify } from "type-fest";
 
 import { ViewStyle } from "react-native";
+
+export type BitmovinVideoRef = Pick<
+  PlayerAPI,
+  "play" | "pause" | "seek" | "mute" | "isMuted" | "unmute"
+>;
 
 export type BitmovinVideoPlayerConfig = Simplify<
   Pick<PlayerConfig, "key"> & {

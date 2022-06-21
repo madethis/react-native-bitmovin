@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { ForwardedRef, useMemo } from "react";
 import {
   Player,
   PlayerAPI,
@@ -9,6 +9,7 @@ import { View } from "react-native";
 import {
   BitmovinVideoPlayerConfig,
   BitmovinVideoProps,
+  BitmovinVideoRef,
   BitmovinVideoSourceConfig,
 } from "./BitmovinVideoProps";
 
@@ -45,12 +46,31 @@ export const usePlayer = ({
   container,
   config,
   source,
+  ref,
   ...rest
-}: { container: MutableRefObject<View> } & BitmovinVideoProps) => {
-  const player = useRef<PlayerAPI | undefined>(undefined);
+}: {
+  container: MutableRefObject<View>;
+  ref: ForwardedRef<BitmovinVideoRef>;
+} & BitmovinVideoProps) => {
+  const player = useRef<PlayerAPI | null>(null);
   const previousEventHandlersRef = useRef<{
     [event: string]: (event: any) => void;
   }>({});
+
+  function setPlayer(p: PlayerAPI | null) {
+    player.current = p;
+    if (!ref) {
+      return;
+    }
+
+    if ("current" in ref) {
+      ref.current = p;
+    }
+
+    if (typeof ref === "function") {
+      ref(p);
+    }
+  }
 
   const [configHash, configHashWithoutUi] = useMemo(() => {
     const { ui: _ui, ...rest } = config;
@@ -58,10 +78,9 @@ export const usePlayer = ({
   }, [config]);
 
   useEffect(() => {
-    console.log("Sync player!");
     // https://cdn.bitmovin.com/player/web/8/docs/index.html
     const newPlayer = new Player(container.current as any, config);
-    player.current = newPlayer;
+    setPlayer(newPlayer);
     previousEventHandlersRef.current = {};
 
     return () => {
