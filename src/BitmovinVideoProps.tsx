@@ -162,4 +162,5 @@ export type BitmovinVideoEvent =
   // iOS: https://bitmovin.com/docs/player/api-reference/ios/ios-sdk-api-reference-v3#/player/ios/3/docs/index.html
   | "ControlsHide"
   | "ControlsShow"
-  | "SourceError";
+  | "SourceError"
+  | "DownloadFinished";

@@ -127,6 +127,9 @@ const App = () => {
               onReady={log}
               onSourceLoaded={log}
               onTimeChanged={log}
+              onDestroy={log}
+              onPaused={log}
+              onPlaying={log}
               onError={log}
               config={config}
               source={source}

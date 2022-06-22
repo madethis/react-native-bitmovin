@@ -9,6 +9,7 @@ import com.bitmovin.player.api.Player
 import com.bitmovin.player.api.PlayerConfig
 import com.bitmovin.player.api.event.Event
 import com.bitmovin.player.api.event.PlayerEvent
+import com.bitmovin.player.api.event.SourceEvent
 import com.bitmovin.player.api.source.SourceConfig
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
@@ -126,8 +127,23 @@ class BitmovinVideoView(context: ThemedReactContext) :
     }
 
     private fun setEventData(event: Event, data: WritableMap) {
-        if (event is PlayerEvent.TimeChanged) {
-            data.putDouble("time", event.time)
+        when (event) {
+            is PlayerEvent.TimeChanged -> {
+                data.putDouble("time", event.time)
+            }
+            is PlayerEvent.Error -> {
+                data.putInt("code", event.code.value)
+                data.putString("message", event.message)
+            }
+            is PlayerEvent.Warning -> {
+                data.putInt("code", event.code.value)
+                data.putString("message", event.message)
+            }
+            is SourceEvent.Error -> {
+                data.putInt("code", event.code.value)
+                data.putString("message", event.message)
+            }
+            else -> {}
         }
     }
 
