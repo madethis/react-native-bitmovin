@@ -27,12 +27,6 @@ const LINKING_ERROR =
 
 const ComponentName = "RNTBitmovinVideo";
 
-function mapNativeEvent(handler: (event: any) => void) {
-  return (event: { nativeEvent: any }) => {
-    return handler(event.nativeEvent);
-  };
-}
-
 const NativeBitmovinVideo =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<NativeProps>(ComponentName)
@@ -78,6 +72,12 @@ export const BitmovinVideo: VoidFunctionComponent<BitmovinVideoProps> = ({
     />
   );
 };
+
+function mapNativeEvent(handler: (event: any) => void) {
+  return (event: { nativeEvent: any }) => {
+    return handler(event.nativeEvent);
+  };
+}
 
 function buildStyleConfig(
   ui: BitmovinVideoPlayerConfig["ui"]
