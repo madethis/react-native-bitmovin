@@ -108,7 +108,7 @@ const App = () => {
               <Button
                 title="Mute"
                 onPress={() => {
-                  ref.current?.mute();
+                  (ref.current as any)?.mute();
                 }}
               />
             </View>
@@ -116,7 +116,7 @@ const App = () => {
               <Button
                 title="Unmute"
                 onPress={() => {
-                  ref.current?.unmute();
+                  (ref.current as any)?.unmute();
                 }}
               />
             </View>

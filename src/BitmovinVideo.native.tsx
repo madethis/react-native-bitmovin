@@ -1,12 +1,21 @@
-import React, { VoidFunctionComponent, useMemo } from "react";
-import { Platform, UIManager, requireNativeComponent } from "react-native";
+import React, {
+  useMemo,
+  forwardRef,
+  useRef,
+  useImperativeHandle,
+  Ref,
+} from "react";
+import { UIManager, findNodeHandle, View } from "react-native";
 import {
   BitmovinVideoEvent,
   BitmovinVideoPlayerConfig,
   BitmovinVideoProps,
+  BitmovinVideoRef,
 } from "./BitmovinVideoProps";
+import { NativeBitmovinVideo } from "./NativeBitmovinVideo";
 
-type NativeProps = BitmovinVideoProps & {
+export type NativeProps = BitmovinVideoProps & {
+  ref: Ref<View>;
   _events: Lowercase<BitmovinVideoEvent>[];
   config: Omit<BitmovinVideoPlayerConfig, "ui" | "style"> & {
     style?: {
@@ -19,59 +28,76 @@ type NativeProps = BitmovinVideoProps & {
   };
 };
 
-const LINKING_ERROR =
-  `The package 'react-native-bitmovin' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: "" }) +
-  "- You rebuilt the app after installing the package\n" +
-  "- You are not using Expo managed workflow\n";
+export const BitmovinVideo = forwardRef<BitmovinVideoRef, BitmovinVideoProps>(
+  ({ source, config, ...props }, ref) => {
+    const nativeRef = useRef<any>(ref);
 
-const ComponentName = "RNTBitmovinVideo";
+    usePlayerRefApi(ref, nativeRef);
 
-const NativeBitmovinVideo =
-  UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent<NativeProps>(ComponentName)
-    : () => {
-        throw new Error(LINKING_ERROR);
-      };
+    const events = [];
+    const childProps: { [key: string]: any } = {};
 
-export const BitmovinVideo: VoidFunctionComponent<BitmovinVideoProps> = ({
-  source,
-  config,
-  ...props
-}) => {
-  const events = [];
-  const childProps: { [key: string]: any } = {};
+    for (const [key, value] of Object.entries(props)) {
+      childProps[key] = value;
 
-  for (const [key, value] of Object.entries(props)) {
-    childProps[key] = value;
-
-    if (key.startsWith("on")) {
-      events.push(key.substring(2).toLowerCase());
-      if (typeof value === "function") {
-        childProps[key] = mapNativeEvent(value);
+      if (key.startsWith("on")) {
+        events.push(key.substring(2).toLowerCase());
+        if (typeof value === "function") {
+          childProps[key] = mapNativeEvent(value);
+        }
       }
     }
+
+    const nativeConfig = useMemo(() => {
+      const styleConfig = buildStyleConfig(config.ui);
+      return {
+        ...config,
+        style: styleConfig,
+      };
+    }, [config]);
+
+    return (
+      <NativeBitmovinVideo
+        // Config as earliest prop
+        ref={nativeRef}
+        config={nativeConfig}
+        _events={events as Lowercase<BitmovinVideoEvent>[]}
+        {...childProps}
+        // Source as last prop
+        source={source}
+      />
+    );
   }
+);
 
-  const nativeConfig = useMemo(() => {
-    const styleConfig = buildStyleConfig(config.ui);
-    return {
-      ...config,
-      style: styleConfig,
-    };
-  }, [config]);
+function usePlayerRefApi(
+  ref: React.ForwardedRef<BitmovinVideoRef>,
+  nativeRef: React.MutableRefObject<any>
+) {
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        play: async (_issuer?: string) => {
+          UIManager.dispatchViewManagerCommand(
+            findNodeHandle(nativeRef.current),
+            "play",
+            []
+          );
+        },
 
-  return (
-    <NativeBitmovinVideo
-      // Config as earliest prop
-      config={nativeConfig}
-      _events={events as Lowercase<BitmovinVideoEvent>[]}
-      {...childProps}
-      // Source as last prop
-      source={source}
-    />
+        pause: async (_issuer?: string) => {
+          UIManager.dispatchViewManagerCommand(
+            findNodeHandle(nativeRef.current),
+            "pause",
+            []
+          );
+        },
+      };
+    },
+    []
   );
-};
+}
 
 function mapNativeEvent(handler: (event: any) => void) {
   return (event: { nativeEvent: any }) => {

@@ -15,22 +15,26 @@ import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.events.RCTEventEmitter
+import com.reactnativebitmovin.BitmovinVideoViewManager.Companion.eventMap
 import kotlin.properties.Delegates
 import kotlin.reflect.KClass
-
-const val TAG = "BitmovinVideoView"
-
-data class Config(val playerConfig: PlayerConfig)
-
-val eventKlassMap = eventMap.toList().associate { (k, v) -> k.substring(2).lowercase() to v }
-val klassEventMap = eventKlassMap.toList().associate { (k, v) -> v to k }
 
 /**
  * Heavily inspired by
  * https://github.com/react-native-video/react-native-video/blob/master/android-exoplayer/src/main/java/com/brentvatne/exoplayer/ReactExoplayerView.java
  */
 class BitmovinVideoView(context: ThemedReactContext) :
-        FrameLayout(context), LifecycleEventListener {
+
+    FrameLayout(context), LifecycleEventListener {
+
+    companion object {
+        const val TAG = "BitmovinVideoView"
+
+        val eventKlassMap =
+            eventMap.toList().associate { (k, v) -> k.substring(2).lowercase() to v }
+        val klassEventMap = eventKlassMap.toList().associate { (k, v) -> v to k }
+
+    }
 
     private val eventEmitter: @Suppress("deprecation") RCTEventEmitter
 
@@ -44,7 +48,7 @@ class BitmovinVideoView(context: ThemedReactContext) :
     private var registeredEvents: Set<String> = mutableSetOf()
 
     var source: SourceConfig? by Delegates.observable(null) { _, _, _ -> startPlayer("source") }
-    var config: Config? by Delegates.observable(null) { _, _, _ -> startPlayer("config") }
+    var config: PlayerConfig? by Delegates.observable(null) { _, _, _ -> startPlayer("config") }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -68,8 +72,8 @@ class BitmovinVideoView(context: ThemedReactContext) :
     private fun reLayout(view: View?) {
         if (view == null) return
         view.measure(
-                MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
         )
         view.layout(view.left, view.top, view.measuredWidth, view.measuredHeight)
     }
@@ -85,7 +89,7 @@ class BitmovinVideoView(context: ThemedReactContext) :
             playerView?.player?.pause()
             playerView?.player?.destroy()
 
-            val player = Player.create(context, config.playerConfig)
+            val player = Player.create(context, config)
 
             val view = PlayerView(context, player)
 
@@ -94,7 +98,7 @@ class BitmovinVideoView(context: ThemedReactContext) :
             updateEvents(registeredEvents, true)
 
             val layoutParams =
-                    LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+                LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             view.layoutParams = layoutParams
             this.addView(playerView, 0, layoutParams)
         }
@@ -170,5 +174,13 @@ class BitmovinVideoView(context: ThemedReactContext) :
             pause()
             destroy()
         }
+    }
+
+    fun play() {
+        playerView?.player?.play()
+    }
+
+    fun pause() {
+        playerView?.player?.pause()
     }
 }

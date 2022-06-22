@@ -1504,6 +1504,16 @@ big-integer@1.6.x:
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.51.tgz#0df92a5d9880560d3ff2d5fd20245c889d130686"
   integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==
 
+bitmovin-player-ui@^3.37.0:
+  version "3.37.0"
+  resolved "https://registry.yarnpkg.com/bitmovin-player-ui/-/bitmovin-player-ui-3.37.0.tgz#2474b66b63ae083ef11687ebf2df1cba43cbb5c3"
+  integrity sha512-Mg9i7HkRUlxmOl3SB2FJG/FTy6UUR2RLkw/1c+Fv06eEKJXiiorh0CIkHwAa7HA8P0uGO46YmbtKQFNeST7R8Q==
+
+bitmovin-player@^8.85.0:
+  version "8.88.0"
+  resolved "https://registry.yarnpkg.com/bitmovin-player/-/bitmovin-player-8.88.0.tgz#1c1a92029f6607b32d3bc6a0b19956a88eb09ef1"
+  integrity sha512-phb24VN/5a81h0YYoBeY5GjHf7dsez+jedLRl6XVvJxnorYXWZXo7OgNqOhH0kfg4VR781EKwaLj1w/BiqY6AQ==
+
 bl@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/bl/-/bl-4.1.0.tgz#451535264182bec2fbbc83a62ab98cf11d9f7b3a"

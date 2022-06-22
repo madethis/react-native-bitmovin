@@ -1,6 +1,5 @@
 package com.reactnativebitmovin
 
-import android.util.Log
 import com.bitmovin.player.api.PlayerConfig
 import com.bitmovin.player.api.event.PlayerEvent
 import com.bitmovin.player.api.event.SourceEvent
@@ -11,20 +10,24 @@ import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 
-val eventMap =
-    mapOf(
-        "onReady" to PlayerEvent.Ready::class,
-        "onError" to PlayerEvent.Error::class,
-        "onTimeChanged" to PlayerEvent.TimeChanged::class,
-        "onSourceLoaded" to SourceEvent.Loaded::class,
-    )
-
-val availableEvents = eventMap.keys.associate {
-    it.substring(2).lowercase() to mapOf("phasedRegistrationNames" to mapOf("bubbled" to it))
-}
-
-
 class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
+
+    companion object {
+        val eventMap =
+            mapOf(
+                "onReady" to PlayerEvent.Ready::class,
+                "onError" to PlayerEvent.Error::class,
+                "onTimeChanged" to PlayerEvent.TimeChanged::class,
+                "onSourceLoaded" to SourceEvent.Loaded::class,
+            )
+
+        val availableEvents =
+            eventMap.keys.associate {
+                it.substring(2).lowercase() to
+                        mapOf("phasedRegistrationNames" to mapOf("bubbled" to it))
+            }
+    }
+
     override fun getName() = "RNTBitmovinVideo"
 
     override fun createViewInstance(reactContext: ThemedReactContext): BitmovinVideoView {
@@ -45,7 +48,7 @@ class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
 
     @ReactProp(name = "config")
     fun setConfig(view: BitmovinVideoView, config: ReadableMap?) {
-        view.config = Config(playerConfig = PlayerConfig(config?.getString("key")!!))
+        view.config = PlayerConfig(config?.getString("key")!!)
     }
 
     @ReactProp(name = "_events")
@@ -67,5 +70,15 @@ class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
 
     override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
         return availableEvents
+    }
+
+    override fun receiveCommand(root: BitmovinVideoView, commandId: String?, args: ReadableArray?) {
+        super.receiveCommand(root, commandId, args)
+
+        when (commandId) {
+            "play" -> root.play()
+            "pause" -> root.pause()
+            else -> throw IllegalArgumentException("Unknown command: $commandId")
+        }
     }
 }

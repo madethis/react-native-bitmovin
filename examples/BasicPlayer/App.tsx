@@ -1,4 +1,12 @@
-import React, { useCallback, useEffect, useReducer, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+  VFC,
+} from "react";
 import {
   Button,
   Dimensions,
@@ -10,8 +18,12 @@ import {
   Text,
   View,
 } from "react-native";
-import { BitmovinVideo, BitmovinVideoProps } from "react-native-bitmovin";
-import { BitmovinVideoPlayerConfig } from "../../src/BitmovinVideoProps";
+import {
+  BitmovinVideo,
+  BitmovinVideoPlayerConfig,
+  BitmovinVideoProps,
+  BitmovinVideoRef,
+} from "react-native-bitmovin";
 
 // @ts-ignore
 import { BITMOVIN_LICENSE_KEY } from "./bitmovin-license-key";
@@ -56,8 +68,13 @@ const config: BitmovinVideoPlayerConfig = {
 };
 
 const App = () => {
+  const ref = useRef<BitmovinVideoRef>(null!);
+  const [_, render] = useReducer((state) => state + 1, 0);
+  const [autoplay, setAutoplay] = useState(true);
   const [show, setShow] = useState(true);
   const [source, setSource] = useState(videos[0]);
+  const [ui, setUi] = useState<boolean>(true);
+
   const { width, height } = useScreenDimensions();
   const [logs, l] = useReducer(
     (state: [Date, string][], action: string): [Date, string][] => {
@@ -106,6 +123,7 @@ const App = () => {
         >
           {show ? (
             <BitmovinVideo
+              ref={ref}
               onReady={log}
               onSourceLoaded={log}
               onTimeChanged={log}
@@ -121,12 +139,50 @@ const App = () => {
             <Text style={{ color: "black" }}>No player</Text>
           )}
         </View>
-        <Button
-          title={show ? "Deactivate player" : "Activate player"}
-          onPress={() => {
-            setShow((v) => !v);
-          }}
-        />
+        <View style={{ flex: 1, flexGrow: 1 }}>
+          <Button
+            title={show ? "Deactivate player" : "Activate player"}
+            onPress={() => {
+              setShow((v) => !v);
+            }}
+          />
+          <Button
+            title={ui ? "Deactivate UI" : "Activate UI"}
+            onPress={() => {
+              setUi((v) => !v);
+            }}
+          />
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+              <Button
+                title="Play"
+                onPress={() => {
+                  ref.current?.play();
+                }}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Button
+                title="Pause"
+                onPress={() => {
+                  ref.current?.pause();
+                }}
+              />
+            </View>
+          </View>
+          <Button
+            title={autoplay ? "Disable autoplay" : "Enable autoplay"}
+            onPress={() => {
+              setAutoplay((v) => !v);
+            }}
+          />
+          <Button
+            title="Render"
+            onPress={() => {
+              render();
+            }}
+          />
+        </View>
         <FlatList
           keyExtractor={(item) => item.title}
           style={{ flexShrink: 1, flexGrow: 0 }}
@@ -171,18 +227,7 @@ const App = () => {
             />
           )}
           renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  flexDirection: "row",
-                }}
-              >
-                <Text style={{ flex: 1, color: "black" }}>
-                  {item[0].toISOString()}
-                </Text>
-                <Text style={{ color: "#555" }}>{item[1]}</Text>
-              </View>
-            );
+            return <LogItem date={item[0]} message={item[1]} />;
           }}
         />
       </View>
@@ -191,3 +236,18 @@ const App = () => {
 };
 
 export default App;
+
+const LogItem: VFC<{ date: Date; message: string }> = memo(
+  ({ date, message }) => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
+        <Text style={{ flex: 1, color: "black" }}>{date.toISOString()}</Text>
+        <Text style={{ color: "#555" }}>{message}</Text>
+      </View>
+    );
+  }
+);

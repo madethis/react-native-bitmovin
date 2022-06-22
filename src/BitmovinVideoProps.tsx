@@ -11,10 +11,7 @@ import { Simplify } from "type-fest";
 
 import { ViewStyle } from "react-native";
 
-export type BitmovinVideoRef = Pick<
-  PlayerAPI,
-  "play" | "pause" | "seek" | "mute" | "isMuted" | "unmute"
->;
+export type BitmovinVideoRef = Pick<PlayerAPI, "play" | "pause">;
 
 export type BitmovinVideoPlayerConfig = Simplify<
   Pick<PlayerConfig, "key"> & {
