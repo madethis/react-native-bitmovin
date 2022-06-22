@@ -59,8 +59,11 @@ extension BitmovinVideo: PlayerListener {
             self.onCastStart?(["type": "caststart"])
         case is CastStartedEvent:
             self.onCastStarted?(["type": "caststarted"])
+#if os(tvOS)
+#else
         case is CastWaitingForDeviceEvent:
             self.onCastWaitingForDevice?(["type": "castwaitingfordevicee"])
+#endif
         case is SourceLoadedEvent:
             self.onSourceLoaded?(["type": "sourceloaded"])
         case is SourceUnloadEvent:
