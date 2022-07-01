@@ -12,3 +12,5 @@ local.properties
 bitmovin-license-key.ts
 
 .DS_Store
+
+.watchman-cookie-*
