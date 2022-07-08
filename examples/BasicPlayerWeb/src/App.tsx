@@ -4,8 +4,10 @@ import {
   FlatList,
   Pressable,
   SafeAreaView,
+  Slider,
   StatusBar,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import {
@@ -35,6 +37,7 @@ const App = () => {
   const [show, setShow] = useState(true);
   const [source, setSource] = useState(videos[0]);
   const [ui, setUi] = useState<boolean>(true);
+  const [volume, setVolume] = useState<number>(100);
 
   const log = useCallback((event: any) => {
     console.debug("event", event);
@@ -67,7 +70,9 @@ const App = () => {
               }}
               onReady={log}
               onSourceLoaded={log}
-              // onTimeChanged={log}
+              onVolumeChanged={(e) => {
+                setVolume(Math.round(e.targetVolume));
+              }}
               source={source}
             />
           )}
@@ -108,7 +113,7 @@ const App = () => {
               <Button
                 title="Mute"
                 onPress={() => {
-                  (ref.current as any)?.mute();
+                  ref.current?.mute();
                 }}
               />
             </View>
@@ -116,7 +121,7 @@ const App = () => {
               <Button
                 title="Unmute"
                 onPress={() => {
-                  (ref.current as any)?.unmute();
+                  ref.current?.unmute();
                 }}
               />
             </View>
@@ -127,6 +132,23 @@ const App = () => {
               setAutoplay((v) => !v);
             }}
           />
+          <View style={{ flexDirection: "row", padding: ".5em" }}>
+            <Text numberOfLines={1} style={{ flex: 1 }}>
+              Volume
+            </Text>
+            <TextInput
+              style={{ textAlign: "center" }}
+              value={String(volume)}
+              keyboardType="numeric"
+              onChangeText={(value) => {
+                const n = Number(value);
+                if (!isNaN(n) && n >= 0 && n <= 100) {
+                  ref.current?.setVolume(n);
+                  setVolume(n);
+                }
+              }}
+            />
+          </View>
           <Button
             title="Render"
             onPress={() => {
