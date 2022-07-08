@@ -26,7 +26,8 @@ import ContainerMp4Module from "bitmovin-player/modules/bitmovinplayer-container
 import SubtitlesModule from "bitmovin-player/modules/bitmovinplayer-subtitles";
 import SubtitlesCEA608Module from "bitmovin-player/modules/bitmovinplayer-subtitles-cea608";
 import StyleModule from "bitmovin-player/modules/bitmovinplayer-style";
-import { UIFactory, UIManager } from "bitmovin-player-ui";
+// import { UIFactory, UIManager } from "bitmovin-player-ui";
+type UIManager = any;
 
 Player.addModule(EngineBitmovinModule);
 Player.addModule(EngineNativeModule);
@@ -193,7 +194,7 @@ function useSyncUi(
 
     // New player, no ui
     if (showUi) {
-      uiManagerRef.current = UIFactory.buildDefaultUI(p);
+      // uiManagerRef.current = UIFactory.buildDefaultUI(p);
     }
   }, [configHash, uiHash]);
 }

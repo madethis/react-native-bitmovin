@@ -7,7 +7,6 @@
   "homepage": "https://madethis.dk",
   "dependencies": {
     "bitmovin-player": "^8.85.0",
-    "bitmovin-player-ui": "^3.37.0",
     "type-fest": "^2.13.1"
   },
   "devDependencies": {
