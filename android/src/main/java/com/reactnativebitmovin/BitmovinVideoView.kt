@@ -87,11 +87,11 @@ class BitmovinVideoView(context: ThemedReactContext) :
 
             Log.d(TAG, "Creating player view $config")
 
-            playerView?.player?.pause()
-            playerView?.player?.destroy()
+            player?.pause()
+            player?.destroy()
+            this.removeView(playerView)
 
-            val player = Player.create(context, config)
-
+            player = Player.create(context, config)
             val view = PlayerView(context, player)
 
             playerView = view
@@ -102,13 +102,16 @@ class BitmovinVideoView(context: ThemedReactContext) :
                 LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             view.layoutParams = layoutParams
             this.addView(playerView, 0, layoutParams)
+
+            this.source?.let {
+                player?.load(it)
+            }
         }
 
         reLayout(playerView)
 
         if (newProp == "source") {
             val source = this.source
-            val player = playerView?.player
             if (source != null) {
                 player?.load(source)
             } else {
@@ -149,7 +152,7 @@ class BitmovinVideoView(context: ThemedReactContext) :
 
     fun registerEvents(events: Set<String>) {
         // If player not ready, just set events
-        val player = playerView?.player
+        val player = this.player
         if (player == null) {
             registeredEvents = events
             return
@@ -165,7 +168,7 @@ class BitmovinVideoView(context: ThemedReactContext) :
     }
 
     private fun updateEvents(events: Set<String>, add: Boolean) {
-        val player = playerView?.player ?: return
+        val player = this.player ?: return
 
         Log.d(TAG, "Updating events (${add}): $events")
 
@@ -186,17 +189,17 @@ class BitmovinVideoView(context: ThemedReactContext) :
     }
 
     fun cleanup() {
-        playerView?.player?.apply {
+        player?.apply {
             pause()
             destroy()
         }
     }
 
     fun play() {
-        playerView?.player?.play()
+        player?.play()
     }
 
     fun pause() {
-        playerView?.player?.pause()
+        player?.pause()
     }
 }

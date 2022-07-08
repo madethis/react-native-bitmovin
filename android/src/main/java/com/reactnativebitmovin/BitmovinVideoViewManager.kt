@@ -1,14 +1,17 @@
 package com.reactnativebitmovin
 
+import android.util.Log
 import com.bitmovin.player.api.PlayerConfig
 import com.bitmovin.player.api.event.PlayerEvent
 import com.bitmovin.player.api.event.SourceEvent
 import com.bitmovin.player.api.source.SourceConfig
+import com.bitmovin.player.api.ui.StyleConfig
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
+import com.reactnativebitmovin.BitmovinVideoView.Companion.TAG
 
 class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
 
@@ -76,8 +79,57 @@ class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
     }
 
     @ReactProp(name = "config")
-    fun setConfig(view: BitmovinVideoView, config: ReadableMap?) {
-        view.config = PlayerConfig(config?.getString("key")!!)
+    fun setConfig(view: BitmovinVideoView, propValue: ReadableMap?) {
+        if (propValue == null) {
+            view.config = null
+            return
+        }
+
+        val key = propValue.getString("key")!!
+
+        val currentConfig = view.config
+        val playerConfig: PlayerConfig = if (key === currentConfig?.key) {
+            currentConfig
+        } else {
+            PlayerConfig(key)
+        }
+
+        val styleConfig = getStyleConfig(propValue.getMap("style"))
+
+        if (styleConfig != null) {
+            Log.d(TAG, "Setting style $styleConfig")
+            playerConfig.styleConfig = styleConfig
+        }
+
+        view.config = playerConfig;
+    }
+
+    private fun getStyleConfig(map: ReadableMap?): StyleConfig? {
+        if (map == null) {
+            return null
+        }
+
+        val styleConfig = StyleConfig(
+            isUiEnabled = map.getBoolean("isUiEnabled"),
+        )
+
+        map.getString("playerUiJs")?.let {
+            styleConfig.playerUiJs = it
+        }
+
+        map.getString("playerUiCss")?.let {
+            styleConfig.playerUiCss = it
+        }
+
+        map.getString("supplementalUiCss")?.let {
+            styleConfig.supplementalPlayerUiCss = it
+        }
+
+        if (map.hasKey("hideFirstFrame")) {
+            styleConfig.isHideFirstFrame = map.getBoolean("hideFirstFrame")
+        }
+
+        return styleConfig
     }
 
     @ReactProp(name = "_events")

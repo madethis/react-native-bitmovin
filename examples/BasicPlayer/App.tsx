@@ -73,7 +73,7 @@ const App = () => {
   const [autoplay, setAutoplay] = useState(true);
   const [show, setShow] = useState(true);
   const [source, setSource] = useState(videos[0]);
-  const [ui, setUi] = useState<boolean>(true);
+  const [ui, setUi] = useState<boolean>(false);
 
   const { width, height } = useScreenDimensions();
   const [logs, l] = useReducer(
@@ -131,7 +131,10 @@ const App = () => {
               onPaused={log}
               onPlaying={log}
               onError={log}
-              config={config}
+              config={{
+                ...config,
+                ui,
+              }}
               source={source}
               style={{
                 width: w,
