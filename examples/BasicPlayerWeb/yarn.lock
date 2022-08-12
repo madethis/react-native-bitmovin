@@ -339,11 +339,6 @@ asap@~2.0.3:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
-bitmovin-player-ui@^3.37.0:
-  version "3.37.0"
-  resolved "https://registry.yarnpkg.com/bitmovin-player-ui/-/bitmovin-player-ui-3.37.0.tgz#2474b66b63ae083ef11687ebf2df1cba43cbb5c3"
-  integrity sha512-Mg9i7HkRUlxmOl3SB2FJG/FTy6UUR2RLkw/1c+Fv06eEKJXiiorh0CIkHwAa7HA8P0uGO46YmbtKQFNeST7R8Q==
-
 bitmovin-player@^8.85.0:
   version "8.86.0"
   resolved "https://registry.yarnpkg.com/bitmovin-player/-/bitmovin-player-8.86.0.tgz#a0bb1d673827b82754810d45f3f6f8ff5b15d872"
@@ -851,6 +846,11 @@ tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=
+
+type-fest@^2.13.1:
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-2.18.0.tgz#fdef3a74e0a9e68ebe46054836650fb91ac3881e"
+  integrity sha512-pRS+/yrW5TjPPHNOvxhbNZexr2bS63WjrMU8a+VzEBhUi9Tz1pZeD+vQz3ut0svZ46P+SRqMEPnJmk2XnvNzTw==
 
 typescript@^4.6.3:
   version "4.7.2"
