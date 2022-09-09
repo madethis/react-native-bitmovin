@@ -14,3 +14,8 @@ bitmovin-license-key.ts
 .DS_Store
 
 .watchman-cookie-*
+
+**/.yarn/*
+!**/.yarn/releases
+!**/.yarn/plugins
+**/.pnp.*
