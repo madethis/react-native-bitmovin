@@ -93,6 +93,20 @@ function usePlayerRefApi(
             []
           );
         },
+        _startFullscreen: async (_issuer?: string) => {
+          UIManager.dispatchViewManagerCommand(
+            findNodeHandle(nativeRef.current),
+            "startFullscreen",
+            []
+          );
+        },
+        _stopFullscreen: async (_issuer?: string) => {
+          UIManager.dispatchViewManagerCommand(
+            findNodeHandle(nativeRef.current),
+            "stopFullscreen",
+            []
+          );
+        },
       };
     },
     []

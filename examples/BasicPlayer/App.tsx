@@ -176,6 +176,24 @@ const App = () => {
               />
             </View>
           </View>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+              <Button
+                title="Fullscreen"
+                onPress={() => {
+                  ref.current?._startFullscreen();
+                }}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Button
+                title="No fullscreen"
+                onPress={() => {
+                  ref.current?._stopFullscreen();
+                }}
+              />
+            </View>
+          </View>
           <Button
             title={autoplay ? "Disable autoplay" : "Enable autoplay"}
             onPress={() => {
@@ -222,7 +240,7 @@ const App = () => {
         />
         <FlatList
           keyExtractor={([d, v]) => `${d.toISOString()}-${v}`}
-          style={{ flex: 1, flexGrow: 1, borderWidth: 3, borderColor: "red" }}
+          style={{ flex: 1, flexGrow: 1 }}
           data={logs}
           ItemSeparatorComponent={() => (
             <View

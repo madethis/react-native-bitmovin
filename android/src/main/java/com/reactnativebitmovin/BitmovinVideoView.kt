@@ -1,9 +1,11 @@
 package com.reactnativebitmovin
 
+import android.os.Build
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.annotation.RequiresApi
 import com.bitmovin.player.PlayerView
 import com.bitmovin.player.api.Player
 import com.bitmovin.player.api.PlayerConfig
@@ -13,6 +15,7 @@ import com.bitmovin.player.api.event.SourceEvent
 import com.bitmovin.player.api.source.SourceConfig
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
+import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.events.RCTEventEmitter
@@ -20,11 +23,12 @@ import com.reactnativebitmovin.BitmovinVideoViewManager.Companion.eventMap
 import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 
+
 /**
  * Heavily inspired by
  * https://github.com/react-native-video/react-native-video/blob/master/android-exoplayer/src/main/java/com/brentvatne/exoplayer/ReactExoplayerView.java
  */
-class BitmovinVideoView(context: ThemedReactContext) :
+class BitmovinVideoView(private val context: ThemedReactContext) :
 
     FrameLayout(context), LifecycleEventListener {
 
@@ -201,5 +205,26 @@ class BitmovinVideoView(context: ThemedReactContext) :
 
     fun pause() {
         player?.pause()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    fun startFullscreen() {
+        UiThreadUtil.runOnUiThread {
+            context.currentActivity?.window?.decorView?.systemUiVisibility =
+                SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                        SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                        SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                        SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                        SYSTEM_UI_FLAG_FULLSCREEN or
+                        SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        }
+
+    }
+
+    fun stopFullscreen() {
+        UiThreadUtil.runOnUiThread {
+            context.currentActivity?.window?.decorView?.systemUiVisibility =
+                SYSTEM_UI_FLAG_LAYOUT_STABLE
+        }
     }
 }

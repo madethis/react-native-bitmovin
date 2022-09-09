@@ -11,10 +11,13 @@ import { Simplify } from "type-fest";
 
 import { ViewStyle } from "react-native";
 
-export type BitmovinVideoRef = Pick<
-  PlayerAPI,
-  "play" | "pause" | "mute" | "unmute" | "setVolume"
->;
+interface UnstableBitmovinVideoRef {
+  _startFullscreen(): void;
+  _stopFullscreen(): void;
+}
+
+export type BitmovinVideoRef = UnstableBitmovinVideoRef &
+  Pick<PlayerAPI, "play" | "pause" | "mute" | "unmute" | "setVolume">;
 
 export type BitmovinVideoPlayerConfig = Simplify<
   Pick<PlayerConfig, "key"> & {

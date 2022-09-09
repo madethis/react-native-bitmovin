@@ -159,6 +159,8 @@ class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
         when (commandId) {
             "play" -> root.play()
             "pause" -> root.pause()
+            "startFullscreen" -> root.startFullscreen()
+            "stopFullscreen" -> root.stopFullscreen()
             else -> throw IllegalArgumentException("Unknown command: $commandId")
         }
     }
