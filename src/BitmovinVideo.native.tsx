@@ -5,13 +5,13 @@ import React, {
   useImperativeHandle,
   Ref,
 } from "react";
-import { UIManager, findNodeHandle, View } from "react-native";
+import { View } from "react-native";
 import {
   BitmovinVideoEvent,
   BitmovinVideoPlayerConfig,
   BitmovinVideoProps,
-  BitmovinVideoRef,
 } from "./BitmovinVideoProps";
+import { BitmovinVideoRef, buildBitmovinVideoRef } from "./BitmovinVideoRef";
 import { NativeBitmovinVideo } from "./NativeBitmovinVideo";
 
 export type NativeProps = BitmovinVideoProps & {
@@ -43,7 +43,7 @@ export const BitmovinVideo = forwardRef<BitmovinVideoRef, BitmovinVideoProps>(
       if (key.startsWith("on")) {
         events.push(key.substring(2).toLowerCase());
         if (typeof value === "function") {
-          childProps[key] = mapNativeEvent(value);
+          childProps[key] = mapNativeEvent(value as (event?: any) => void);
         }
       }
     }
@@ -74,46 +74,10 @@ function usePlayerRefApi(
   ref: React.ForwardedRef<BitmovinVideoRef>,
   nativeRef: React.MutableRefObject<any>
 ) {
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        play: async (_issuer?: string) => {
-          UIManager.dispatchViewManagerCommand(
-            findNodeHandle(nativeRef.current),
-            "play",
-            []
-          );
-        },
-
-        pause: async (_issuer?: string) => {
-          UIManager.dispatchViewManagerCommand(
-            findNodeHandle(nativeRef.current),
-            "pause",
-            []
-          );
-        },
-        _startFullscreen: async (_issuer?: string) => {
-          UIManager.dispatchViewManagerCommand(
-            findNodeHandle(nativeRef.current),
-            "startFullscreen",
-            []
-          );
-        },
-        _stopFullscreen: async (_issuer?: string) => {
-          UIManager.dispatchViewManagerCommand(
-            findNodeHandle(nativeRef.current),
-            "stopFullscreen",
-            []
-          );
-        },
-      };
-    },
-    []
-  );
+  useImperativeHandle(ref, () => buildBitmovinVideoRef(nativeRef), []);
 }
 
-function mapNativeEvent(handler: (event: any) => void) {
+function mapNativeEvent(handler: (event?: any) => void) {
   return (event: { nativeEvent: any }) => {
     return handler(event.nativeEvent);
   };

@@ -1,6 +1,7 @@
 import React, { forwardRef, useRef, VFC } from "react";
 import { View } from "react-native";
-import { BitmovinVideoProps, BitmovinVideoRef } from "./BitmovinVideoProps";
+import { BitmovinVideoProps } from "./BitmovinVideoProps";
+import { BitmovinVideoRef } from "./BitmovinVideoRef";
 import { usePlayer } from "./player";
 // @ts-ignore
 // import("bitmovin-player-ui/dist/css/bitmovinplayer-ui.min.css");

@@ -181,7 +181,7 @@ const App = () => {
               <Button
                 title="Fullscreen"
                 onPress={() => {
-                  ref.current?._startFullscreen();
+                  ref.current?._startFullscreen?.();
                 }}
               />
             </View>
@@ -189,7 +189,7 @@ const App = () => {
               <Button
                 title="No fullscreen"
                 onPress={() => {
-                  ref.current?._stopFullscreen();
+                  ref.current?._stopFullscreen?.();
                 }}
               />
             </View>

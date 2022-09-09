@@ -3,6 +3,7 @@ package com.reactnativebitmovin
 import android.os.Build
 import android.util.Log
 import android.view.View
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
@@ -207,18 +208,21 @@ class BitmovinVideoView(private val context: ThemedReactContext) :
         player?.pause()
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun startFullscreen() {
         UiThreadUtil.runOnUiThread {
+
             context.currentActivity?.window?.decorView?.systemUiVisibility =
                 SYSTEM_UI_FLAG_LAYOUT_STABLE or
                         SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                         SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                         SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                         SYSTEM_UI_FLAG_FULLSCREEN or
-                        SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        } else {
+                            0
+                        })
         }
-
     }
 
     fun stopFullscreen() {
@@ -226,5 +230,13 @@ class BitmovinVideoView(private val context: ThemedReactContext) :
             context.currentActivity?.window?.decorView?.systemUiVisibility =
                 SYSTEM_UI_FLAG_LAYOUT_STABLE
         }
+    }
+
+    fun mute() {
+        player?.mute()
+    }
+
+    fun unmute() {
+        player?.unmute()
     }
 }

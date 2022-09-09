@@ -1,6 +1,5 @@
 import {
   PlaybackConfig,
-  PlayerAPI,
   PlayerConfig,
   PlayerEventMap,
   SourceConfig,
@@ -10,14 +9,6 @@ import type { PlayerEvent as PlayerEventEnum } from "bitmovin-player";
 import { Simplify } from "type-fest";
 
 import { ViewStyle } from "react-native";
-
-interface UnstableBitmovinVideoRef {
-  _startFullscreen(): void;
-  _stopFullscreen(): void;
-}
-
-export type BitmovinVideoRef = UnstableBitmovinVideoRef &
-  Pick<PlayerAPI, "play" | "pause" | "mute" | "unmute" | "setVolume">;
 
 export type BitmovinVideoPlayerConfig = Simplify<
   Pick<PlayerConfig, "key"> & {

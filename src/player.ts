@@ -9,9 +9,9 @@ import { View } from "react-native";
 import {
   BitmovinVideoPlayerConfig,
   BitmovinVideoProps,
-  BitmovinVideoRef,
   BitmovinVideoSourceConfig,
 } from "./BitmovinVideoProps";
+import { BitmovinVideoRef } from "./BitmovinVideoRef";
 
 import PolyfillModule from "bitmovin-player/modules/bitmovinplayer-polyfill";
 import EngineBitmovinModule from "bitmovin-player/modules/bitmovinplayer-engine-bitmovin";
