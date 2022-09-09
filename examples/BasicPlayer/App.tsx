@@ -94,10 +94,21 @@ const App = () => {
   let w = width;
   let h = (w * 9) / 16;
 
-  if (width > height) {
+  const orientation = width > height ? "landscape" : "portrait";
+
+  if (orientation === "landscape") {
     w = (height * 16) / 9;
     h = height;
   }
+
+  useEffect(() => {
+    console.log("toggle fullscreen", orientation);
+    if (orientation === "landscape") {
+      ref.current?._startFullscreen?.();
+    } else {
+      ref.current?._stopFullscreen?.();
+    }
+  }, [orientation]);
 
   const backgroundStyle = {
     flex: 1,
@@ -106,7 +117,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
       <View
         style={{
           backgroundColor: "#eee",
@@ -115,7 +126,9 @@ const App = () => {
       >
         <View
           style={{
-            width: w,
+            borderColor: "red",
+            backgroundColor: "black",
+            width: orientation === "portrait" ? w : width,
             height: h,
             justifyContent: "center",
             alignItems: "center",
@@ -266,6 +279,8 @@ const LogItem: VFC<{ date: Date; message: string }> = memo(
     return (
       <View
         style={{
+          paddingLeft: 16,
+          paddingRight: 16,
           flexDirection: "row",
         }}
       >
