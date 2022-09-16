@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   # s.source 'https://github.com/bitmovin/cocoapod-specs.git'
 
   s.dependency "React-Core"
-  s.dependency 'BitmovinPlayer', "3.18.0"
+  s.dependency 'BitmovinPlayer', "3.27.0"
 
   s.xcconfig = {
     'OTHER_LDFLAGS': '-ObjC',
