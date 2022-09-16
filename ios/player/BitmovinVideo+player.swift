@@ -41,6 +41,14 @@ extension BitmovinVideo {
         let playerConfig = PlayerConfig()
         playerConfig.key = licenseKey
         
+        if let playbackConfigDict = config["playback"] as? Dictionary<String, Any> {
+            playerConfig.playbackConfig = PlaybackConfig.fromDict(dict: playbackConfigDict)
+        }
+        
+        if let styleDict = config["style"] as? Dictionary<String, Any> {
+            playerConfig.styleConfig = StyleConfig.fromDict(dict: styleDict)
+        }
+        
         self.player = PlayerFactory.create(playerConfig: playerConfig)
         self.player!.add(listener: self)
         
@@ -67,6 +75,9 @@ extension BitmovinVideo {
         if let drmDict = source["drm"] as? Dictionary<String, Any> {
             sourceConfig.drmConfig = DrmConfig.fromDict(dict: drmDict)
         }
+        
+        
+        
         
         self.player!.load(sourceConfig: sourceConfig)
     }
