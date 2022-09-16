@@ -1,6 +1,7 @@
 package com.reactnativebitmovin
 
 import android.util.Log
+import com.bitmovin.player.api.PlaybackConfig
 import com.bitmovin.player.api.PlayerConfig
 import com.bitmovin.player.api.event.PlayerEvent
 import com.bitmovin.player.api.event.SourceEvent
@@ -25,10 +26,12 @@ class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
                 "onPlaying" to PlayerEvent.Playing::class,
                 "onPaused" to PlayerEvent.Paused::class,
                 "onSeek" to PlayerEvent.Seek::class,
+                @Suppress("SpellCheckingInspection")
                 "onSeeked" to PlayerEvent.Seeked::class,
                 "onTimeShift" to PlayerEvent.TimeShift::class,
                 "onTimeShifted" to PlayerEvent.TimeShifted::class,
                 "onMuted" to PlayerEvent.Muted::class,
+                @Suppress("SpellCheckingInspection")
                 "onUnmuted" to PlayerEvent.Unmuted::class,
                 "onPlayerResized" to PlayerEvent.VideoSizeChanged::class,
                 "onPlaybackFinished" to PlayerEvent.PlaybackFinished::class,
@@ -87,6 +90,9 @@ class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
 
         val key = propValue.getString("key")!!
 
+        val playbackConfig = getPlaybackConfig(propValue.getMap("playback"))
+        val styleConfig = getStyleConfig(propValue.getMap("style"))
+
         val currentConfig = view.config
         val playerConfig: PlayerConfig = if (key === currentConfig?.key) {
             currentConfig
@@ -94,14 +100,17 @@ class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
             PlayerConfig(key)
         }
 
-        val styleConfig = getStyleConfig(propValue.getMap("style"))
-
         if (styleConfig != null) {
             Log.d(TAG, "Setting style $styleConfig")
             playerConfig.styleConfig = styleConfig
         }
 
-        view.config = playerConfig;
+        if (playbackConfig != null) {
+            Log.d(TAG, "Setting playback $playbackConfig")
+            playerConfig.playbackConfig = playbackConfig
+        }
+
+        view.config = playerConfig
     }
 
     private fun getStyleConfig(map: ReadableMap?): StyleConfig? {
@@ -130,6 +139,31 @@ class BitmovinVideoViewManager : SimpleViewManager<BitmovinVideoView>() {
         }
 
         return styleConfig
+    }
+
+    private fun getPlaybackConfig(map: ReadableMap?): PlaybackConfig? {
+        if (map == null) {
+            return null
+        }
+
+        val playbackConfig = PlaybackConfig(
+            // "seeking" | "audioLanguage" not supported
+        )
+
+        if (map.hasKey("autoplay")) {
+            playbackConfig.isAutoplayEnabled = map.getBoolean("autoplay")
+        }
+
+        if (map.hasKey("muted")) {
+            playbackConfig.isMuted = map.getBoolean("muted")
+        }
+
+        if (map.hasKey("timeShift")) {
+            playbackConfig.isTimeShiftEnabled = map.getBoolean("timeShift")
+        }
+
+        return playbackConfig
+
     }
 
     @ReactProp(name = "_events")
